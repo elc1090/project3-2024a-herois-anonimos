@@ -1,0 +1,82 @@
+@baseUrl = http://localhost:3000/api
+
+# @name create_author
+POST {{baseUrl}}/authors
+Content-Type: application/json
+
+{
+  "name": "Wederson Fagundes",
+  "email": "wed2@example.com",
+  "password": "123456"
+}
+
+###
+# @name fetch_authors
+GET {{baseUrl}}/authors
+Content-Type: application/json
+
+###
+# @name get_author
+GET {{baseUrl}}/authors/6667c9e6c2e738e983a3b81c
+Content-Type: application/json
+
+###
+# @name uppate_author
+PUT {{baseUrl}}/authors/6667c9e6c2e738e983a3b81c
+Content-Type: application/json
+
+{
+  "name": "Wederson Fagundes",
+  "email": "wed@example.com"
+}
+
+###
+# @name delete_author
+DELETE {{baseUrl}}/authors/6667ca8ac2e738e983a3b81f
+Content-Type: application/json
+
+###
+# @name autenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "email": "wed@example.com",
+  "password": "123456"
+}
+
+###
+# @name create_post
+POST {{baseUrl}}/posts
+Content-Type: application/json
+
+{
+  "title": "New post",
+  "content": "Testing create post",
+  "authorId": "6667c9e6c2e738e983a3b81c"
+}
+
+###
+# @name fetch_posts
+GET {{baseUrl}}/posts
+Content-Type: application/json
+
+###
+# @name get_posts
+GET {{baseUrl}}/posts/6667cd48c2e738e983a3b826
+Content-Type: application/json
+
+###
+# @name update_post
+PUT {{baseUrl}}/posts/6667d1f5c2e738e983a3b82c
+Content-Type: application/json
+
+{
+  "title": "New title",
+  "content": "New content"
+}
+
+###
+# @name delete_post
+DELETE {{baseUrl}}/posts/6667dd06c2e738e983a3b837
+Content-Type: application/json
