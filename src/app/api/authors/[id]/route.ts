@@ -3,7 +3,7 @@ import { compare, hash } from 'bcrypt'
 import { z } from 'zod'
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
-  const id = z.string().uuid().parse(params.id)
+  const id = z.string().parse(params.id)
   const author = await prisma.author.findUnique({ where: { id } })
 
   if (!author) {
@@ -20,7 +20,7 @@ export async function DELETE(
   _: Request,
   { params }: { params: { id: string } },
 ) {
-  const id = z.string().uuid().parse(params.id)
+  const id = z.string().parse(params.id)
   const author = await prisma.author.findUnique({ where: { id } })
 
   if (!author) {
@@ -46,7 +46,7 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: string } },
 ) {
-  const id = z.string().uuid().parse(params.id)
+  const id = z.string().parse(params.id)
   const body = await request.json()
 
   const { name, email, oldPassword, password } = requestBodySchema.parse(body)

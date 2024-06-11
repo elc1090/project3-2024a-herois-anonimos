@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   const body = await req.json()
   const { email, password } = requestBodySchema.parse(body)
 
-  const authorExists = await prisma.authors.findUnique({
+  const authorExists = await prisma.author.findUnique({
     where: {
       email,
     },
