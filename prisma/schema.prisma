@@ -34,5 +34,20 @@ model Post {
   author   Author @relation(fields: [authorId], references: [id])
   authorId String @map("author_id") @db.ObjectId
 
+  questions Question[]
+
   @@map("posts")
+}
+
+model Question {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  answer    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @map("post_id") @db.ObjectId
+
+  @@map("questions")
 }

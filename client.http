@@ -80,3 +80,33 @@ Content-Type: application/json
 # @name delete_post
 DELETE {{baseUrl}}/posts/6667dd06c2e738e983a3b837
 Content-Type: application/json
+
+###
+# @name create_question_by_post_id
+POST {{baseUrl}}/posts/6667e5e08d545178230e4f24/questions
+Content-Type: application/json
+
+{
+  "title": "Question",
+  "answer": "Answer"
+}
+
+###
+# @name fetch_questions_by_post_id
+GET {{baseUrl}}/posts/6667e5e08d545178230e4f24/questions
+Content-Type: application/json
+
+###
+# @name updated_question_by_post_id
+PUT {{baseUrl}}/posts/6667e5e08d545178230e4f24/questions/66691f17b7c1761fbbac3025
+Content-Type: application/json
+
+{
+  "title": "Question updated",
+  "answer": "Answer updated"
+}
+
+###
+# @name delete_question_by_post_id
+DELETE {{baseUrl}}/posts/6667e5e08d545178230e4f24/questions/66691f17b7c1761fbbac3025
+Content-Type: application/json

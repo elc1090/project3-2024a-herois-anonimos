@@ -5,6 +5,7 @@ import { hash } from 'bcrypt'
 const prisma = new PrismaClient()
 
 async function seed() {
+  await prisma.question.deleteMany()
   await prisma.post.deleteMany()
   await prisma.author.deleteMany()
 
@@ -34,85 +35,74 @@ async function seed() {
     },
   })
 
-  await prisma.post.createMany({
-    data: [
-      {
-        authorId: author1.id,
+  for (let i = 0; i < 25; i++) {
+    const post = await prisma.post.create({
+      data: {
+        authorId: faker.helpers.arrayElement([
+          author1.id,
+          author2.id,
+          author3.id,
+        ]),
         title: faker.lorem.word(5),
         content: faker.lorem.paragraph(5),
       },
-      {
-        authorId: author1.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author2.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author1.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author1.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author3.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author3.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author2.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author1.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author2.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author2.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author1.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author2.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author1.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-      {
-        authorId: author3.id,
-        title: faker.lorem.word(5),
-        content: faker.lorem.paragraph(5),
-      },
-    ],
-  })
+    })
+
+    await prisma.question.createMany({
+      data: [
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+        {
+          title: faker.lorem.sentence(5),
+          answer: faker.lorem.paragraphs(5),
+          postId: post.id,
+        },
+      ],
+    })
+  }
 }
 
 seed().then(() => {
