@@ -7,10 +7,13 @@ export const env = createEnv({
     APP_SECRET: z.string() || '',
   },
 
-  client: {},
+  client: {
+    NEXT_PUBLIC_API_BASE_URL: z.string().url(),
+  },
 
   runtimeEnv: {
     APP_SECRET: process.env.APP_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   },
 })
