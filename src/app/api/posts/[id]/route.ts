@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { createSlugFromText } from '@/utils/slug'
 import { z } from 'zod'
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
@@ -23,6 +24,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
       id: post.id,
       title: post.title,
       content: post.content,
+      slug: post.slug,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       author: {
@@ -57,9 +59,24 @@ export async function PUT(
     )
   }
 
+  const postWithSameTitle = await prisma.post.findUnique({
+    where: { title },
+  })
+
+  if (postWithSameTitle) {
+    return Response.json(
+      {
+        message: 'Já existe uma postagem com o mesmo título.',
+      },
+      { status: 409 },
+    )
+  }
+
+  const slug = createSlugFromText(title)
+
   await prisma.post.update({
     where: { id },
-    data: { title, content },
+    data: { title, content, slug },
   })
 
   return Response.json({

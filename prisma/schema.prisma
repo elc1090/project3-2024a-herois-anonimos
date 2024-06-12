@@ -26,8 +26,9 @@ model Author {
 
 model Post {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
+  title     String   @unique
   content   String?
+  slug      String   @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt() @map("updated_at")
 

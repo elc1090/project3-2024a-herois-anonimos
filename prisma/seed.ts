@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { hash } from 'bcrypt'
+import { createSlugFromText } from '../src/utils/slug'
 
 const prisma = new PrismaClient()
 
@@ -36,6 +37,9 @@ async function seed() {
   })
 
   for (let i = 0; i < 25; i++) {
+    const title = faker.lorem.word(5)
+    const slug = createSlugFromText(title)
+
     const post = await prisma.post.create({
       data: {
         authorId: faker.helpers.arrayElement([
@@ -43,7 +47,8 @@ async function seed() {
           author2.id,
           author3.id,
         ]),
-        title: faker.lorem.word(5),
+        title,
+        slug,
         content: faker.lorem.paragraph(5),
       },
     })
@@ -51,52 +56,52 @@ async function seed() {
     await prisma.question.createMany({
       data: [
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
         {
-          title: faker.lorem.sentence(5),
+          title: faker.lorem.sentence(5).replace('.', '?'),
           answer: faker.lorem.paragraphs(5),
           postId: post.id,
         },
