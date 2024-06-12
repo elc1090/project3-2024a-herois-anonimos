@@ -1,6 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { twMerge } from 'tailwind-merge'
+
 import './globals.css'
+import '@/lib/dayjs'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,8 +20,17 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="pt">
+      <body
+        className={twMerge(
+          inter.className,
+          'flex flex-col h-screen bg-slate-100',
+        )}
+      >
+        <Header />
+        <div className="flex-1">{children}</div>
+        <Footer />
+      </body>
     </html>
   )
 }
