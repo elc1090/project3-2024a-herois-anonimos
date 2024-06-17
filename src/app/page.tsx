@@ -12,7 +12,7 @@ async function fetchPosts(): Promise<Post[]> {
     },
   })
 
-  return response.posts ?? []
+  return response.data.posts ?? []
 }
 
 export default async function Home() {
