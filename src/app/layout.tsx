@@ -6,6 +6,7 @@ import './globals.css'
 import '@/lib/dayjs'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import { Providers } from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,9 +28,11 @@ export default function RootLayout({
           'flex flex-col h-screen bg-slate-100',
         )}
       >
-        <Header />
-        <div className="flex-1">{children}</div>
-        <Footer />
+        <Providers>
+          <Header />
+          <div className="flex-1">{children}</div>
+          <Footer />
+        </Providers>
       </body>
     </html>
   )

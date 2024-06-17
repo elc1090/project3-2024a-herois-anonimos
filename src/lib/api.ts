@@ -1,19 +1,48 @@
+'use server'
+
 import { env } from '@/env'
+import { cookies } from 'next/headers'
 
 export async function api(path: string, init?: RequestInit) {
   const baseUrl = env.NEXT_PUBLIC_API_BASE_URL
   const apiPrefix = '/api'
   const url = new URL(apiPrefix.concat(path), baseUrl)
 
-  await new Promise((resolve) => setTimeout(resolve, 2000))
+  const token = cookies().get('@dev-web:token')?.value
 
-  const response = await fetch(url, init)
+  const response = await fetch(url, {
+    ...init,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...init?.headers,
+    },
+  })
 
-  if ([200, 201, 202, 203].includes(response.status))
-    return await response.json()
+  if ([200, 201, 202, 203].includes(response.status)) {
+    const data = await response.json()
 
-  if (response.status === 204) return null
+    return {
+      success: true,
+      data,
+      message: null,
+      errors: null,
+    }
+  }
+
+  if (response.status === 204) {
+    return {
+      success: true,
+      data: null,
+      message: null,
+      errors: null,
+    }
+  }
 
   const { message } = await response.json()
-  throw new Error(message)
+  return {
+    success: false,
+    data: null,
+    message,
+    errors: null,
+  }
 }
