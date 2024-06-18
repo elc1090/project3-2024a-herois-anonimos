@@ -91,7 +91,12 @@ export function PostData() {
   }
 
   async function handleSubmit() {
+    if (questions.length <= 0) {
+      return toast.info('Uma pergunta deve ser adicionada!')
+    }
+
     setIsSubmitting(true)
+
     const response = await api('/posts', {
       method: 'POST',
       body: JSON.stringify({
