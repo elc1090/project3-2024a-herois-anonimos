@@ -9,8 +9,9 @@
 ![Print da lista de perguntas padrões](.vscode/assets/questions.png)
 **Perguntas padrões**
 
-Acesso:
-Repositório:
+Acesso: https://herois-anonimos.vercel.app
+
+Repositório original: https://github.com/wedersonf/herois-anonimos
 
 #### Desenvolvedor
 Wederson Fagundes, Sistemas de Informação
