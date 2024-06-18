@@ -41,6 +41,17 @@ export function Header() {
         )}
       </div>
 
+      {user && (
+        <div className="flex flex-col w-full max-w-40 bg-slate-700 h-10 -mr-1 pr-2 pl-2 justify-center rounded-l">
+          <span className="inline-block text-slate-300 text-xs">
+            Conectado com
+          </span>
+          <span className="inline-block text-slate-300 text-xs truncate">
+            {user.name}
+          </span>
+        </div>
+      )}
+
       {user ? (
         <button
           type="button"
