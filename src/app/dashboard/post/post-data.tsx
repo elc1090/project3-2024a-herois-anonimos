@@ -2,12 +2,21 @@
 
 import { useState } from 'react'
 
-import { questionOptions } from '@/utils/question-options'
-import { ChevronDown, ChevronUp, Loader2, X } from 'lucide-react'
+import {
+  CheckIcon,
+  ChevronDown,
+  ChevronDownIcon,
+  ChevronUp,
+  ChevronUpIcon,
+  Loader2,
+  X,
+} from 'lucide-react'
 import { api } from '@/lib/api'
 import { useAuth } from '@/contexts/auth'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import * as Select from '@radix-ui/react-select'
+import { questionOptions } from '@/utils/questions'
 
 interface Questions {
   title: string
@@ -26,9 +35,12 @@ export function PostData() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const filteredOptions = questionOptions.filter(
-    (item) => !questions.find((q) => q.title === item),
-  )
+  const filteredOptions = questionOptions.map((item) => ({
+    ...item,
+    questions: item.questions.filter(
+      (qo) => !questions.find((q) => q.title === qo),
+    ),
+  }))
 
   function handleAddQuestion() {
     setQuestions((prev) => [
@@ -106,7 +118,7 @@ export function PostData() {
         Criar publicação
       </h1>
 
-      <div className="flex flex-col gap-4 w-full">
+      <div className="flex flex-col gap-2 w-full">
         <div className="flex flex-col space-y-1">
           <label>Título</label>
           <input
@@ -127,33 +139,33 @@ export function PostData() {
         </div>
       </div>
 
-      <div>
+      <div className="flex flex-col gap-6 mt-4">
         {questions.map((question, idx) => (
           <div key={question.title} className="space-y-1">
             <div className="flex gap-2">
               <div className="flex gap-1">
                 <button
-                  className="p-1 border border-slate-300 rounded enabled:hover:bg-slate-400 enabled:hover:text-white disabled:opacity-20"
+                  className="size-6 flex items-center justify-center border border-slate-300 rounded enabled:hover:bg-slate-400 enabled:hover:text-white disabled:opacity-20"
                   onClick={() => handleChangeQuestionOrder(idx, 'down')}
                   disabled={idx === questions.length - 1}
                 >
                   <ChevronDown className="size-4" />
                 </button>
                 <button
-                  className="p-1 border border-slate-300 rounded enabled:hover:bg-slate-400 enabled:hover:text-white disabled:opacity-20"
+                  className="size-6 flex items-center justify-center border border-slate-300 rounded enabled:hover:bg-slate-400 enabled:hover:text-white disabled:opacity-20"
                   onClick={() => handleChangeQuestionOrder(idx, 'up')}
                   disabled={idx === 0}
                 >
                   <ChevronUp className="size-4" />
                 </button>
+                <button
+                  onClick={() => handleRemoveQuestion(idx)}
+                  className="size-6 flex items-center justify-center bg-red-400 text-white rounded hover:bg-red-600 hover:text-white transition-all"
+                >
+                  <X className="size-4" />
+                </button>
               </div>
               <h2>{question.title}</h2>
-              <button
-                onClick={() => handleRemoveQuestion(idx)}
-                className="bg-white p-1 rounded hover:bg-red-600 hover:text-white transition-all"
-              >
-                <X className="size-4" />
-              </button>
             </div>
             <textarea
               rows={5}
@@ -168,20 +180,58 @@ export function PostData() {
       </div>
 
       <div className="flex gap-4">
-        <select
-          value={selected}
-          onChange={(e) => setSelected(e.target.value)}
-          className="h-10 px-4 py-2 rounded w-full"
-        >
-          <option value="" disabled>
-            Selecione uma pergunta
-          </option>
-          {filteredOptions.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
+        <Select.Root value={selected} onValueChange={setSelected}>
+          <Select.Trigger className="flex justify-between items-center gap-2 bg-white px-4 h-10 py-2 rounded w-full truncate">
+            <Select.Value placeholder="Selecione uma pergunta" />
+            <Select.Icon asChild>
+              <ChevronDown className="size-4" />
+            </Select.Icon>
+          </Select.Trigger>
+
+          <Select.Portal>
+            <Select.Content className="overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
+              <Select.ScrollUpButton className="flex items-center justify-center text-slate-800 h-[25px] bg-white cursor-default">
+                <ChevronUpIcon className="size-4" />
+              </Select.ScrollUpButton>
+              <Select.Viewport className="p-2 bg-white h-10">
+                {filteredOptions.map((category) => (
+                  <Select.Group key={category.groupName}>
+                    <Select.Label className="px-2 text-xs leading-[25px] text-slate-500 font-medium uppercase">
+                      {category.groupName}
+                    </Select.Label>
+
+                    {category.questions.map((question) => (
+                      <Select.Item
+                        key={question}
+                        value={question}
+                        className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                      >
+                        <Select.ItemText>{question}</Select.ItemText>
+                        <Select.ItemIndicator>
+                          <CheckIcon className="size-4" />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                    ))}
+                    {category.questions.length === 0 && (
+                      <Select.Item
+                        disabled
+                        value="empty"
+                        className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                      >
+                        <Select.ItemText>
+                          Todas as perguntas da categoria já foram selecionadas.
+                        </Select.ItemText>
+                      </Select.Item>
+                    )}
+                  </Select.Group>
+                ))}
+              </Select.Viewport>
+              <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-slate-800 cursor-default">
+                <ChevronDownIcon className="size-4" />
+              </Select.ScrollDownButton>
+            </Select.Content>
+          </Select.Portal>
+        </Select.Root>
 
         <button
           className="bg-slate-200 px-4 py-2 flex items-center justify-center rounded enabled:hover:bg-slate-300 disabled:opacity-30"
@@ -193,7 +243,7 @@ export function PostData() {
       </div>
 
       <button
-        className="w-40 h-10 px-4 py-2 flex items-center justify-center rounded text-white ml-auto bg-emerald-400 enabled:hover:bg-emerald-500"
+        className="w-40 mt-4 h-10 px-4 py-2 flex items-center justify-center rounded text-white ml-auto bg-slate-700 enabled:hover:bg-slate-600"
         type="button"
         onClick={handleSubmit}
       >
