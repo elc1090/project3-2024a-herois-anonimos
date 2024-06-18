@@ -48,7 +48,7 @@ export default async function DashboardPage() {
           href="/dashboard/post"
           className="border border-slate-700 text-slate-700 px-4 py-2 rounded hover:bg-slate-200"
         >
-          Criar nova publicação
+          Criar uma publicação
         </Link>
       </div>
 
@@ -73,6 +73,17 @@ export default async function DashboardPage() {
             </div>
           </article>
         ))}
+
+        {posts.length === 0 && (
+          <div className="p-4 rounded bg-slate-200 border border-slate-500 shadow-sm">
+            <h2 className="text-slate-700 font-medium text-lg">
+              Comece a publicar histórias!
+            </h2>
+            <span className="text-slate-500">
+              Nenhuma publicação foi adicionada. Relate a primeira história!
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )
