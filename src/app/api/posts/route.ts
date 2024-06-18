@@ -7,11 +7,17 @@ const requestBodySchema = z.object({
   title: z.string(),
   content: z.string(),
   authorId: z.string(),
+  questions: z.array(
+    z.object({
+      title: z.string(),
+      answer: z.string(),
+    }),
+  ),
 })
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const { title, content, authorId } = requestBodySchema.parse(body)
+  const { title, content, authorId, questions } = requestBodySchema.parse(body)
 
   const author = await prisma.author.findUnique({
     where: { id: authorId },
@@ -48,18 +54,32 @@ export async function POST(request: Request) {
     },
   })
 
+  const formattedCreateQuestions = questions.map((question) => ({
+    title: question.title,
+    answer: question.answer,
+    postId: post.id,
+  }))
+
+  await prisma.question.createMany({
+    data: formattedCreateQuestions,
+  })
+
   return Response.json({ post }, { status: 201 })
 }
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const slug = searchParams.get('slug')
+  const authorId = searchParams.get('authorId')
 
   const posts = await prisma.post.findMany({
-    where: { slug: slug || undefined },
+    where: { slug: slug || undefined, authorId: authorId ?? undefined },
     include: {
       author: true,
       questions: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
     },
   })
 

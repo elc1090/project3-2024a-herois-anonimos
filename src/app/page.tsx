@@ -7,9 +7,7 @@ import type { Post } from '@/utils/dto/post'
 
 async function fetchPosts(): Promise<Post[]> {
   const response = await api('/posts', {
-    next: {
-      revalidate: 60 * 2, // 2 minutes
-    },
+    cache: 'no-store',
   })
 
   return response.data.posts ?? []

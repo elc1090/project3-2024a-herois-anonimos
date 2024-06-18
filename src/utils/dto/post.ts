@@ -4,6 +4,9 @@ export interface Post {
   content: string
   slug: string
   createdAt: string
+  author: {
+    name: string
+  }
   questions: Array<{
     id: string
     title: string

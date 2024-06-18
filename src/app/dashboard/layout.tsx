@@ -10,5 +10,7 @@ export default function DashboardLayout({
     redirect('/auth/sign-in')
   }
 
-  return <>{children}</>
+  return (
+    <div className="flex mx-auto w-full max-w-screen-lg py-6">{children}</div>
+  )
 }

@@ -1,5 +1,6 @@
 import { api } from '@/lib/api'
 import type { Post } from '@/utils/dto/post'
+import dayjs from 'dayjs'
 import { redirect } from 'next/navigation'
 
 async function getPostBySlug(slug: string): Promise<Post> {
@@ -9,11 +10,11 @@ async function getPostBySlug(slug: string): Promise<Post> {
     },
   })
 
-  if (response.error) {
+  if (!response.success) {
     redirect('404')
   }
 
-  return response.posts[0]
+  return response.data.posts[0]
 }
 
 export default async function Post({ params }: { params: { slug: string } }) {
@@ -21,6 +22,10 @@ export default async function Post({ params }: { params: { slug: string } }) {
 
   return (
     <main className="w-full max-w-[800px] flex flex-col gap-4 mx-auto py-10">
+      <h2 className="text-sm text-slate-600">
+        Publicado por {post.author.name} -{' '}
+        {dayjs(post.createdAt).format('DD [de] MMMM [de] YYYY')}
+      </h2>
       <h1 className="text-2xl leading-tight font-bold text-slate-900">
         {post.title}
       </h1>
