@@ -101,6 +101,10 @@ export async function DELETE(
     )
   }
 
+  await prisma.question.deleteMany({
+    where: { postId: id },
+  })
+
   await prisma.post.delete({
     where: { id },
   })

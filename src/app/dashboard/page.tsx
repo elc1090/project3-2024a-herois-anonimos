@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { jwtDecode } from 'jwt-decode'
 import dayjs from 'dayjs'
 import type { Metadata } from 'next'
+import { DeleteButton } from './delete-button'
 
 export const metadata: Metadata = {
   title: 'Minhas publicações',
@@ -67,14 +68,7 @@ export default async function DashboardPage() {
 
             <div>
               <div className="flex gap-4">
-                {/* <button className="flex gap-2 justify-center items-center bg-slate-300 px-4 py-2 rounded text-slate-900 hover:bg-slate-400/50">
-                  <EditIcon className="size-4" />
-                  Editar
-                </button> */}
-                {/* <button className="flex gap-2 justify-center items-center bg-red-700 px-4 py-2 rounded text-red-50 hover:bg-red-700/80">
-                  <Trash2Icon className="size-4" />
-                  Deletar
-                </button> */}
+                <DeleteButton postId={item.id} />
               </div>
             </div>
           </article>
