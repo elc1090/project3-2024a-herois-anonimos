@@ -9,6 +9,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
     where: { id },
     include: {
       author: true,
+      questions: true,
     },
   })
 
@@ -32,6 +33,11 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
         name: post.author.name,
         email: post.author.email,
       },
+      questions: post.questions.map((question) => ({
+        id: question.id,
+        title: question.title,
+        answer: question.answer,
+      })),
     },
   })
 }
@@ -39,6 +45,13 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 const requestBodySchema = z.object({
   title: z.string(),
   content: z.string(),
+  questions: z.array(
+    z.object({
+      id: z.string().nullable(),
+      title: z.string(),
+      answer: z.string(),
+    }),
+  ),
 })
 
 export async function PUT(
@@ -48,9 +61,14 @@ export async function PUT(
   const id = z.string().parse(params.id)
   const body = await request.json()
 
-  const { title, content } = requestBodySchema.parse(body)
+  const { title, content, questions } = requestBodySchema.parse(body)
 
-  const post = await prisma.post.findUnique({ where: { id } })
+  const post = await prisma.post.findUnique({
+    where: { id },
+    include: {
+      questions: true,
+    },
+  })
 
   if (!post) {
     return Response.json(
@@ -63,7 +81,7 @@ export async function PUT(
     where: { title },
   })
 
-  if (postWithSameTitle) {
+  if (postWithSameTitle && post.id !== id) {
     return Response.json(
       {
         message: 'Já existe uma postagem com o mesmo título.',
@@ -74,10 +92,38 @@ export async function PUT(
 
   const slug = createSlugFromText(title)
 
-  await prisma.post.update({
-    where: { id },
-    data: { title, content, slug },
-  })
+  const questionsOnPost = post.questions.map((question) => question.id)
+  const questionsIds = questions.map((question) => question.id)
+
+  const removed = questionsOnPost
+    .filter((questionId) => !questionsIds.includes(questionId))
+    .filter((questionId) => questionId !== null)
+  const added = questions.filter((question) => question.id === null)
+
+  await prisma.$transaction([
+    prisma.question.deleteMany({
+      where: { id: { in: removed } },
+    }),
+    prisma.post.update({
+      where: { id },
+      data: {
+        title,
+        content,
+        slug,
+        questions:
+          added.length > 0
+            ? {
+                createMany: {
+                  data: added.map((question) => ({
+                    title: question.title,
+                    answer: question.answer,
+                  })),
+                },
+              }
+            : undefined,
+      },
+    }),
+  ])
 
   return Response.json({
     post,

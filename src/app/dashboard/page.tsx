@@ -5,21 +5,14 @@ import { jwtDecode } from 'jwt-decode'
 import dayjs from 'dayjs'
 import type { Metadata } from 'next'
 import { DeleteButton } from './delete-button'
+import { EditButton } from './edit-button'
+import type { Post } from '@/utils/dto/post'
 
 export const metadata: Metadata = {
   title: 'Minhas publicações',
 }
 
-async function fetchMyPosts(authorId: string): Promise<
-  {
-    id: string
-    title: string
-    content: string
-    slug: string
-    createdAt: string
-    updatedAt: string
-  }[]
-> {
+async function fetchMyPosts(authorId: string): Promise<Post[]> {
   const response = await api(`/posts?authorId=${authorId}`, {
     cache: 'no-store',
   })
@@ -68,6 +61,7 @@ export default async function DashboardPage() {
 
             <div>
               <div className="flex gap-4">
+                <EditButton post={item} />
                 <DeleteButton postId={item.id} />
               </div>
             </div>

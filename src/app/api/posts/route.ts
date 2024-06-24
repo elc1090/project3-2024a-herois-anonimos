@@ -51,17 +51,15 @@ export async function POST(request: Request) {
       content,
       slug,
       authorId,
+      questions: {
+        createMany: {
+          data: questions.map((question) => ({
+            title: question.title,
+            answer: question.answer,
+          })),
+        },
+      },
     },
-  })
-
-  const formattedCreateQuestions = questions.map((question) => ({
-    title: question.title,
-    answer: question.answer,
-    postId: post.id,
-  }))
-
-  await prisma.question.createMany({
-    data: formattedCreateQuestions,
   })
 
   return Response.json({ post }, { status: 201 })
@@ -96,10 +94,10 @@ export async function GET(request: NextRequest) {
         name: item.author.name,
         email: item.author.email,
       },
-      questions: item.questions.map((q) => ({
-        id: q.id,
-        title: q.title,
-        answer: q.answer,
+      questions: item.questions.map((question) => ({
+        id: question.id,
+        title: question.title,
+        answer: question.answer,
       })),
     })),
   })

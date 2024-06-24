@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import {
   CheckIcon,
   ChevronDown,
   ChevronDownIcon,
+  ChevronLeftIcon,
   ChevronUp,
   ChevronUpIcon,
   Loader2,
@@ -14,9 +15,10 @@ import {
 import { api } from '@/lib/api'
 import { useAuth } from '@/contexts/auth'
 import { toast } from 'react-toastify'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import * as Select from '@radix-ui/react-select'
 import { questionOptions } from '@/utils/questions'
+import type { Post } from '@/utils/dto/post'
 
 interface Questions {
   title: string
@@ -25,12 +27,15 @@ interface Questions {
 
 export function PostData() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
+
   const { user } = useAuth()
 
   const [selected, setSelected] = useState('')
 
   const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
+  const [content, setContent] = useState('')
   const [questions, setQuestions] = useState<Questions[]>([])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -42,10 +47,32 @@ export function PostData() {
     ),
   }))
 
+  const getPost = useCallback(async () => {
+    if (!id) return
+
+    const response = await api(`/posts/${id}`, {
+      cache: 'no-store',
+    })
+
+    if (!response.success) {
+      return toast(response.message)
+    }
+
+    const post = response.data.post as Post
+    setTitle(post.title)
+    setContent(post.content)
+    setQuestions(post.questions)
+  }, [id])
+
+  function handleGoBack() {
+    router.back()
+  }
+
   function handleAddQuestion() {
     setQuestions((prev) => [
       ...prev,
       {
+        id: null,
         title: selected,
         answer: '',
       },
@@ -97,28 +124,60 @@ export function PostData() {
 
     setIsSubmitting(true)
 
-    const response = await api('/posts', {
-      method: 'POST',
-      body: JSON.stringify({
-        title,
-        content: description,
-        questions,
-        authorId: user?.id,
-      }),
-    })
+    if (id) {
+      const response = await api(`/posts/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          title,
+          content,
+          questions,
+        }),
+      })
 
-    if (!response.success) {
+      if (!response.success) {
+        setIsSubmitting(false)
+        return toast.error(response.message)
+      }
+
+      toast.success('Postagem atualizada!')
       setIsSubmitting(false)
-      return toast.error(response.message)
-    }
+    } else {
+      const response = await api('/posts', {
+        method: 'POST',
+        body: JSON.stringify({
+          title,
+          content,
+          questions,
+          authorId: user?.id,
+        }),
+      })
 
-    toast.success('Postagem publicada!')
-    router.push('/dashboard')
-    setIsSubmitting(false)
+      if (!response.success) {
+        setIsSubmitting(false)
+        return toast.error(response.message)
+      }
+
+      toast.success('Postagem publicada!')
+      router.push('/dashboard')
+    }
   }
+
+  useEffect(() => {
+    if (id) {
+      getPost()
+    }
+  }, [id, getPost])
 
   return (
     <div className="flex flex-col gap-4 w-full">
+      <button
+        onClick={handleGoBack}
+        className="flex text-nowrap gap-2 rounded-md bg-slate-200 text-slate-900 items-center text-sm border w-min px-4 py-2 justify-center hover:bg-slate-300"
+      >
+        <ChevronLeftIcon className="size-4" />
+        Voltar para lista de postagens
+      </button>
+
       <h1 className="font-bold text-slate-600 uppercase text-xl">
         Criar publicação
       </h1>
@@ -136,8 +195,8 @@ export function PostData() {
         <div className="flex flex-col space-y-1">
           <label>Descrição</label>
           <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             rows={3}
             className="px-3 py-1 border rounded w-full border-zinc-200 shadow-sm"
           />
@@ -254,6 +313,8 @@ export function PostData() {
       >
         {isSubmitting ? (
           <Loader2 className="size-4 animate-spin" />
+        ) : id ? (
+          'Atualizar'
         ) : (
           'Publicar'
         )}

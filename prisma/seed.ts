@@ -3,6 +3,8 @@ import { faker } from '@faker-js/faker'
 import { hash } from 'bcrypt'
 import { createSlugFromText } from '../src/utils/slug'
 
+import { posts } from './data.json'
+
 const prisma = new PrismaClient()
 
 async function seed() {
@@ -15,7 +17,7 @@ async function seed() {
   const author1 = await prisma.author.create({
     data: {
       name: faker.person.fullName(),
-      email: faker.internet.email(),
+      email: 'john@example.com',
       password: hashedPassword,
     },
   })
@@ -36,76 +38,28 @@ async function seed() {
     },
   })
 
-  for (let i = 0; i < 25; i++) {
-    const title = faker.lorem.word(5)
-    const slug = createSlugFromText(title)
+  for (const post of posts) {
+    const slug = createSlugFromText(post.title)
 
-    const post = await prisma.post.create({
+    await prisma.post.create({
       data: {
+        title: post.title,
+        content: post.content,
+        slug,
         authorId: faker.helpers.arrayElement([
           author1.id,
           author2.id,
           author3.id,
         ]),
-        title,
-        slug,
-        content: faker.lorem.paragraph(5),
+        questions: {
+          createMany: {
+            data: post.questions.map((question) => ({
+              title: question.title,
+              answer: question.answer,
+            })),
+          },
+        },
       },
-    })
-
-    await prisma.question.createMany({
-      data: [
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-        {
-          title: faker.lorem.sentence(5).replace('.', '?'),
-          answer: faker.lorem.paragraphs(5),
-          postId: post.id,
-        },
-      ],
     })
   }
 }

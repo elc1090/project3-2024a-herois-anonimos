@@ -8,7 +8,7 @@ export interface Post {
     name: string
   }
   questions: Array<{
-    id: string
+    id: string | null
     title: string
     answer: string
   }>
