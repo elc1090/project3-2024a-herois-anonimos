@@ -67,11 +67,12 @@ export async function POST(request: Request) {
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const slug = searchParams.get('slug')
-  const authorId = searchParams.get('authorId')
+  const slug = searchParams.get('slug') ?? undefined
+  const page = searchParams.get('page') ?? undefined
+  const authorId = searchParams.get('authorId') ?? undefined
 
   const posts = await prisma.post.findMany({
-    where: { slug: slug || undefined, authorId: authorId ?? undefined },
+    where: { slug, authorId },
     include: {
       author: true,
       questions: true,
@@ -79,9 +80,16 @@ export async function GET(request: NextRequest) {
     orderBy: {
       createdAt: 'desc',
     },
+    take: page ? 10 : undefined,
+    skip: page ? (Number(page) - 1) * 10 : undefined,
+  })
+
+  const total = await prisma.post.count({
+    where: { slug, authorId },
   })
 
   return Response.json({
+    total,
     posts: posts.map((item) => ({
       id: item.id,
       title: item.title,
