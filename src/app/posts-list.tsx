@@ -40,9 +40,7 @@ export function PostsList({ initialPosts, initialTotalPosts }: PostsListProps) {
   const fetchPosts = useCallback(async () => {
     setIsLoading(true)
     const { data } = await api(`/posts?page=${pageIndex + 1}`, {
-      next: {
-        revalidate: 60,
-      },
+      cache: 'no-store',
     })
 
     setPosts(data.posts)
@@ -64,7 +62,9 @@ export function PostsList({ initialPosts, initialTotalPosts }: PostsListProps) {
                 <span className="text-sm text-slate-500">
                   {dayjs(post.createdAt).format('DD [de] MMMM [de] YYYY')}
                 </span>
-                <h1 className="text-3xl font-bold -mt-2">{post.title}</h1>
+                <h1 className="text-3xl font-bold -mt-2 leading-none line-clamp-2">
+                  {post.title}
+                </h1>
                 <Image
                   src={faker.image.urlPicsumPhotos()}
                   width={700}
