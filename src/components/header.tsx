@@ -3,9 +3,10 @@
 import { useAuth } from '@/contexts/auth'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 export function Header() {
+  const router = useRouter()
   const pathname = usePathname()
   const { user, signOut } = useAuth()
 
@@ -13,10 +14,17 @@ export function Header() {
     signOut()
   }
 
+  function handleGoToHome() {
+    router.push('/')
+  }
+
   return (
     <div className="flex items-center justify-center min-h-20 max-h-20 bg-slate-600 px-6">
       <div className="flex items-center w-full gap-4">
-        <Link href="/" className="flex items-center gap-2 flex-nowrap">
+        <button
+          onClick={handleGoToHome}
+          className="flex items-center gap-2 flex-nowrap"
+        >
           <Image
             src={require('@/assets/icon-black.svg')}
             alt=""
@@ -26,7 +34,7 @@ export function Header() {
           <span className="text-xl text-slate-50 font-medium text-nowrap select-none">
             Heróis Anônimos
           </span>
-        </Link>
+        </button>
 
         <Link
           href="/"

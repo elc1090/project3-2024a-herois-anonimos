@@ -1,5 +1,10 @@
+import { Suspense } from 'react'
 import { PostsList } from './posts-list'
 
-export default function Home() {
-  return <PostsList />
+export default async function Home() {
+  return (
+    <Suspense>
+      <PostsList />
+    </Suspense>
+  )
 }
