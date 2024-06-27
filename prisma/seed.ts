@@ -8,7 +8,6 @@ import { posts } from './data.json'
 const prisma = new PrismaClient()
 
 async function seed() {
-  await prisma.question.deleteMany()
   await prisma.post.deleteMany()
   await prisma.author.deleteMany()
 
@@ -46,19 +45,12 @@ async function seed() {
         title: post.title,
         content: post.content,
         slug,
+        questions: post.questions,
         authorId: faker.helpers.arrayElement([
           author1.id,
           author2.id,
           author3.id,
         ]),
-        questions: {
-          createMany: {
-            data: post.questions.map((question) => ({
-              title: question.title,
-              answer: question.answer,
-            })),
-          },
-        },
       },
     })
   }

@@ -51,14 +51,7 @@ export async function POST(request: Request) {
       content,
       slug,
       authorId,
-      questions: {
-        createMany: {
-          data: questions.map((question) => ({
-            title: question.title,
-            answer: question.answer,
-          })),
-        },
-      },
+      questions,
     },
   })
 
@@ -75,7 +68,6 @@ export async function GET(request: NextRequest) {
     where: { slug, authorId },
     include: {
       author: true,
-      questions: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -95,6 +87,7 @@ export async function GET(request: NextRequest) {
       title: item.title,
       content: item.content,
       slug: item.slug,
+      questions: item.questions,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
       author: {
@@ -102,11 +95,6 @@ export async function GET(request: NextRequest) {
         name: item.author.name,
         email: item.author.email,
       },
-      questions: item.questions.map((question) => ({
-        id: question.id,
-        title: question.title,
-        answer: question.answer,
-      })),
     })),
   })
 }

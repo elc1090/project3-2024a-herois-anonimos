@@ -9,7 +9,6 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
     where: { id },
     include: {
       author: true,
-      questions: true,
     },
   })
 
@@ -26,6 +25,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
       title: post.title,
       content: post.content,
       slug: post.slug,
+      questions: post.questions,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       author: {
@@ -33,11 +33,6 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
         name: post.author.name,
         email: post.author.email,
       },
-      questions: post.questions.map((question) => ({
-        id: question.id,
-        title: question.title,
-        answer: question.answer,
-      })),
     },
   })
 }
@@ -47,7 +42,6 @@ const requestBodySchema = z.object({
   content: z.string(),
   questions: z.array(
     z.object({
-      id: z.string().nullable(),
       title: z.string(),
       answer: z.string(),
     }),
@@ -63,12 +57,7 @@ export async function PUT(
 
   const { title, content, questions } = requestBodySchema.parse(body)
 
-  const post = await prisma.post.findUnique({
-    where: { id },
-    include: {
-      questions: true,
-    },
-  })
+  const post = await prisma.post.findUnique({ where: { id } })
 
   if (!post) {
     return Response.json(
@@ -92,35 +81,14 @@ export async function PUT(
 
   const slug = createSlugFromText(title)
 
-  const questionsOnPost = post.questions.map((question) => question.id)
-  const questionsIds = questions.map((question) => question.id)
-
-  const removed = questionsOnPost
-    .filter((questionId) => !questionsIds.includes(questionId))
-    .filter((questionId) => questionId !== null)
-  const added = questions.filter((question) => question.id === null)
-
   await prisma.$transaction([
-    prisma.question.deleteMany({
-      where: { id: { in: removed } },
-    }),
     prisma.post.update({
       where: { id },
       data: {
         title,
         content,
         slug,
-        questions:
-          added.length > 0
-            ? {
-                createMany: {
-                  data: added.map((question) => ({
-                    title: question.title,
-                    answer: question.answer,
-                  })),
-                },
-              }
-            : undefined,
+        questions,
       },
     }),
   ])
@@ -146,10 +114,6 @@ export async function DELETE(
       { status: 404 },
     )
   }
-
-  await prisma.question.deleteMany({
-    where: { postId: id },
-  })
 
   await prisma.post.delete({
     where: { id },

@@ -5,9 +5,7 @@ import { redirect } from 'next/navigation'
 
 async function getPostBySlug(slug: string): Promise<Post> {
   const response = await api(`/posts?slug=${slug}`, {
-    next: {
-      revalidate: 60 * 2, // 2 minutes
-    },
+    cache: 'no-store',
   })
 
   if (!response.success) {
@@ -32,7 +30,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
       <p className="text-base text-slate-700">{post.content}</p>
 
       {post.questions.map((item) => (
-        <div key={item.id} className="flex flex-col gap-2">
+        <div key={item.title} className="flex flex-col gap-2">
           <h2 className="font-semibold text-lg leading-none text-slate-900">
             {item.title}
           </h2>

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { PostData } from './post-data'
 
 export const metadata: Metadata = {
-  title: 'Nova publicação',
+  title: 'Publicação',
 }
 
 export default function PostPage() {
