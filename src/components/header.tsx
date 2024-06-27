@@ -16,7 +16,7 @@ export function Header() {
   return (
     <div className="flex items-center justify-center min-h-20 max-h-20 bg-slate-600 px-6">
       <div className="flex items-center w-full gap-4">
-        <div className="flex items-center gap-2 flex-nowrap">
+        <Link href="/" className="flex items-center gap-2 flex-nowrap">
           <Image
             src={require('@/assets/icon-black.svg')}
             alt=""
@@ -26,7 +26,7 @@ export function Header() {
           <span className="text-xl text-slate-50 font-medium text-nowrap select-none">
             Heróis Anônimos
           </span>
-        </div>
+        </Link>
 
         <Link
           href="/"
