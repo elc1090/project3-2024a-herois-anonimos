@@ -38,6 +38,7 @@ export function PostData() {
   const [content, setContent] = useState('')
   const [questions, setQuestions] = useState<Questions[]>([])
 
+  const [isLoading, setIsLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const filteredOptions = questionOptions.map((item) => ({
@@ -49,20 +50,24 @@ export function PostData() {
 
   const getPost = useCallback(async () => {
     if (!id) return
+    setIsLoading(true)
 
     const response = await api(`/posts/${id}`, {
       cache: 'no-store',
     })
 
     if (!response.success) {
-      return toast(response.message)
+      setIsLoading(false)
+      toast(response.message)
+      return router.push('/dashboard/posts')
     }
 
     const post = response.data.post as Post
     setTitle(post.title)
     setContent(post.content)
     setQuestions(post.questions)
-  }, [id])
+    setIsLoading(false)
+  }, [id, router])
 
   function handleGoBack() {
     router.back()
@@ -179,146 +184,156 @@ export function PostData() {
       </button>
 
       <h1 className="font-bold text-slate-600 uppercase text-xl">
-        Criar publicação
+        {id ? 'Editar' : 'Criar'} publicação
       </h1>
 
-      <div className="flex flex-col gap-2 w-full">
-        <div className="flex flex-col space-y-1">
-          <label>Título</label>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="px-3 py-1 h-10 border w-full rounded border-zinc-200 shadow-sm"
-          />
+      {isLoading ? (
+        <div className="flex gap-2 items-center">
+          <Loader2 className="size-5 animate-spin" />
+          <span className="text-slate-700">Carregando dados</span>
         </div>
-
-        <div className="flex flex-col space-y-1">
-          <label>Descrição</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={3}
-            className="px-3 py-1 border rounded w-full border-zinc-200 shadow-sm"
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-6 mt-4">
-        {questions.map((question, idx) => (
-          <div key={question.title} className="space-y-1">
-            <div className="flex gap-2">
-              <div className="flex gap-1">
-                <button
-                  className="size-6 flex items-center justify-center border border-slate-300 rounded enabled:hover:bg-slate-400 enabled:hover:text-white disabled:opacity-20"
-                  onClick={() => handleChangeQuestionOrder(idx, 'down')}
-                  disabled={idx === questions.length - 1}
-                >
-                  <ChevronDown className="size-4" />
-                </button>
-                <button
-                  className="size-6 flex items-center justify-center border border-slate-300 rounded enabled:hover:bg-slate-400 enabled:hover:text-white disabled:opacity-20"
-                  onClick={() => handleChangeQuestionOrder(idx, 'up')}
-                  disabled={idx === 0}
-                >
-                  <ChevronUp className="size-4" />
-                </button>
-                <button
-                  onClick={() => handleRemoveQuestion(idx)}
-                  className="size-6 flex items-center justify-center bg-red-400 text-white rounded hover:bg-red-600 hover:text-white transition-all"
-                >
-                  <X className="size-4" />
-                </button>
-              </div>
-              <h2>{question.title}</h2>
+      ) : (
+        <>
+          <div className="flex flex-col gap-2 w-full">
+            <div className="flex flex-col space-y-1">
+              <label>Título</label>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="px-3 py-1 h-10 border w-full rounded border-zinc-200 shadow-sm"
+              />
             </div>
-            <textarea
-              rows={5}
-              value={questions[idx].answer}
-              onChange={(e) =>
-                handleEditQuestion(idx, 'answer', e.target.value)
-              }
-              className="px-3 py-2 border rounded w-full border-zinc-200 shadow-sm"
-            />
+
+            <div className="flex flex-col space-y-1">
+              <label>Descrição</label>
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                rows={3}
+                className="px-3 py-1 border rounded w-full border-zinc-200 shadow-sm"
+              />
+            </div>
           </div>
-        ))}
-      </div>
 
-      <div className="flex gap-4">
-        <Select.Root value={selected} onValueChange={setSelected}>
-          <Select.Trigger className="flex justify-between items-center gap-2 bg-white px-4 h-10 py-2 rounded w-full truncate">
-            <Select.Value placeholder="Selecione uma pergunta" />
-            <Select.Icon asChild>
-              <ChevronDown className="size-4" />
-            </Select.Icon>
-          </Select.Trigger>
+          <div className="flex flex-col gap-6 mt-4">
+            {questions.map((question, idx) => (
+              <div key={question.title} className="space-y-1">
+                <div className="flex gap-2">
+                  <div className="flex gap-1">
+                    <button
+                      className="size-6 flex items-center justify-center border border-slate-300 rounded enabled:hover:bg-slate-400 enabled:hover:text-white disabled:opacity-20"
+                      onClick={() => handleChangeQuestionOrder(idx, 'down')}
+                      disabled={idx === questions.length - 1}
+                    >
+                      <ChevronDown className="size-4" />
+                    </button>
+                    <button
+                      className="size-6 flex items-center justify-center border border-slate-300 rounded enabled:hover:bg-slate-400 enabled:hover:text-white disabled:opacity-20"
+                      onClick={() => handleChangeQuestionOrder(idx, 'up')}
+                      disabled={idx === 0}
+                    >
+                      <ChevronUp className="size-4" />
+                    </button>
+                    <button
+                      onClick={() => handleRemoveQuestion(idx)}
+                      className="size-6 flex items-center justify-center bg-red-400 text-white rounded hover:bg-red-600 hover:text-white transition-all"
+                    >
+                      <X className="size-4" />
+                    </button>
+                  </div>
+                  <h2>{question.title}</h2>
+                </div>
+                <textarea
+                  rows={5}
+                  value={questions[idx].answer}
+                  onChange={(e) =>
+                    handleEditQuestion(idx, 'answer', e.target.value)
+                  }
+                  className="px-3 py-2 border rounded w-full border-zinc-200 shadow-sm"
+                />
+              </div>
+            ))}
+          </div>
 
-          <Select.Portal>
-            <Select.Content className="overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-              <Select.ScrollUpButton className="flex items-center justify-center text-slate-800 h-[25px] bg-white cursor-default">
-                <ChevronUpIcon className="size-4" />
-              </Select.ScrollUpButton>
-              <Select.Viewport className="p-2 bg-white h-10">
-                {filteredOptions.map((category) => (
-                  <Select.Group key={category.groupName}>
-                    <Select.Label className="px-2 text-xs leading-[25px] text-slate-500 font-medium uppercase">
-                      {category.groupName}
-                    </Select.Label>
+          <div className="flex gap-4">
+            <Select.Root value={selected} onValueChange={setSelected}>
+              <Select.Trigger className="flex justify-between items-center gap-2 bg-white px-4 h-10 py-2 rounded w-full truncate">
+                <Select.Value placeholder="Selecione uma pergunta" />
+                <Select.Icon asChild>
+                  <ChevronDown className="size-4" />
+                </Select.Icon>
+              </Select.Trigger>
 
-                    {category.questions.map((question) => (
-                      <Select.Item
-                        key={question}
-                        value={question}
-                        className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
-                      >
-                        <Select.ItemText>{question}</Select.ItemText>
-                        <Select.ItemIndicator>
-                          <CheckIcon className="size-4" />
-                        </Select.ItemIndicator>
-                      </Select.Item>
+              <Select.Portal>
+                <Select.Content className="overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
+                  <Select.ScrollUpButton className="flex items-center justify-center text-slate-800 h-[25px] bg-white cursor-default">
+                    <ChevronUpIcon className="size-4" />
+                  </Select.ScrollUpButton>
+                  <Select.Viewport className="p-2 bg-white h-10">
+                    {filteredOptions.map((category) => (
+                      <Select.Group key={category.groupName}>
+                        <Select.Label className="px-2 text-xs leading-[25px] text-slate-500 font-medium uppercase">
+                          {category.groupName}
+                        </Select.Label>
+
+                        {category.questions.map((question) => (
+                          <Select.Item
+                            key={question}
+                            value={question}
+                            className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                          >
+                            <Select.ItemText>{question}</Select.ItemText>
+                            <Select.ItemIndicator>
+                              <CheckIcon className="size-4" />
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                        ))}
+                        {category.questions.length === 0 && (
+                          <Select.Item
+                            disabled
+                            value="empty"
+                            className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                          >
+                            <Select.ItemText>
+                              Todas as perguntas da categoria já foram
+                              selecionadas.
+                            </Select.ItemText>
+                          </Select.Item>
+                        )}
+                      </Select.Group>
                     ))}
-                    {category.questions.length === 0 && (
-                      <Select.Item
-                        disabled
-                        value="empty"
-                        className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
-                      >
-                        <Select.ItemText>
-                          Todas as perguntas da categoria já foram selecionadas.
-                        </Select.ItemText>
-                      </Select.Item>
-                    )}
-                  </Select.Group>
-                ))}
-              </Select.Viewport>
-              <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-slate-800 cursor-default">
-                <ChevronDownIcon className="size-4" />
-              </Select.ScrollDownButton>
-            </Select.Content>
-          </Select.Portal>
-        </Select.Root>
+                  </Select.Viewport>
+                  <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-slate-800 cursor-default">
+                    <ChevronDownIcon className="size-4" />
+                  </Select.ScrollDownButton>
+                </Select.Content>
+              </Select.Portal>
+            </Select.Root>
 
-        <button
-          className="bg-slate-200 px-4 py-2 flex items-center justify-center rounded enabled:hover:bg-slate-300 disabled:opacity-30"
-          onClick={handleAddQuestion}
-          disabled={!selected.length}
-        >
-          Adicionar
-        </button>
-      </div>
+            <button
+              className="bg-slate-200 px-4 py-2 flex items-center justify-center rounded enabled:hover:bg-slate-300 disabled:opacity-30"
+              onClick={handleAddQuestion}
+              disabled={!selected.length}
+            >
+              Adicionar
+            </button>
+          </div>
 
-      <button
-        className="w-40 mt-4 h-10 px-4 py-2 flex items-center justify-center rounded text-white ml-auto bg-slate-700 enabled:hover:bg-slate-600"
-        type="button"
-        onClick={handleSubmit}
-      >
-        {isSubmitting ? (
-          <Loader2 className="size-4 animate-spin" />
-        ) : id ? (
-          'Atualizar'
-        ) : (
-          'Publicar'
-        )}
-      </button>
+          <button
+            className="w-40 mt-4 h-10 px-4 py-2 flex items-center justify-center rounded text-white ml-auto bg-slate-700 enabled:hover:bg-slate-600"
+            type="button"
+            onClick={handleSubmit}
+          >
+            {isSubmitting ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : id ? (
+              'Atualizar'
+            ) : (
+              'Publicar'
+            )}
+          </button>
+        </>
+      )}
     </div>
   )
 }

@@ -11,19 +11,14 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 import { api } from '@/lib/api'
 
-interface PostsListProps {
-  initialPosts: Post[]
-  initialTotalPosts: number
-}
-
-export function PostsList({ initialPosts, initialTotalPosts }: PostsListProps) {
+export function PostsList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const pathname = usePathname()
 
-  const [posts, setPosts] = useState<Post[]>(initialPosts)
-  const [total, setTotal] = useState(initialTotalPosts)
-  const [isLoading, setIsLoading] = useState(false)
+  const [posts, setPosts] = useState<Post[]>([])
+  const [total, setTotal] = useState(10)
+  const [isLoading, setIsLoading] = useState(true)
 
   const pageIndex = z.coerce
     .number()
