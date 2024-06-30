@@ -3,11 +3,8 @@ import { z } from 'zod'
 
 import { upload } from '@/lib/r2-storage'
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
+export const runtime = 'nodejs'
+export const preferredRegion = 'auto'
 
 export async function POST(request: NextRequest) {
   try {
