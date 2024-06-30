@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export function Footer() {
   return (
-    <div className="flex justify-between items-center gap-2 px-6 py-4 bg-slate-600">
+    <div className="flex justify-between items-center gap-2 px-20 py-4 bg-slate-600">
       <div className="flex flex-col">
         <span className="text-sm text-slate-300">
           &copy; 2024 - Trabalho Desenvolvimento Web

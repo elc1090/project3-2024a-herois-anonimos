@@ -19,7 +19,7 @@ export function Header() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-20 max-h-20 bg-slate-600 px-6">
+    <div className="flex items-center justify-center min-h-20 max-h-20 bg-slate-600 px-20">
       <div className="flex items-center w-full gap-4">
         <button
           onClick={handleGoToHome}
