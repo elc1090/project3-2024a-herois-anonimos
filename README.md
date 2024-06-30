@@ -23,6 +23,70 @@ A aplicação conta com perguntas pré definidas que podem ser incluídas, visan
 #### Desenvolvimento
 O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento, mas mantendo uma interface simples e de fácil entendimento.
 
+## Atualizações
+<table class="table table-bordered table-hover table-condensed">
+  <thead>
+    <tr>
+      <th">Versão</th>
+      <th">Data da entrega</th>
+      <th">Funcionalidade/Alterações</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+  <tr>
+    <td align="right">0.1.0</td>
+    <td>18/06/2024</td>
+    <td>
+      <ul>
+        <li>Criação de conta para autores;</li>
+        <li>Autenticação do autor;</li>
+        <li>Criação de novas publicações;</li>
+        <li>Listagem de publicações;</li>
+        <li>Listagem de publicações por id do author;</li>
+        <li>Busca de publicação por slug;</li>
+        <li>Busca de publicação por id;</li>
+        <li>Remover publicação.</li>
+      </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="right">0.1.1</td>
+    <td>25/06/2024</td>
+    <td>
+      <ul>
+        <li>Correção dos endpoints da API;</li>
+        <li>Edição de publicações;</li>
+        <li>Botão para voltar para lista de publicações;</li>
+        <li>Paginação da listagem de publicações na tela inicial;</li>
+        <li>Carregamento estilo esqueleto na página inicial;</li>
+        <li>Carregamento estilo esqueleto na listagem de publicações do autor;</li>
+        <li>Incluído botão de voltar para o top quando rolagem estiver ativa.</li>
+      </ul>
+    </td>
+  </tr>
+
+  <tr>
+   <td align="right">0.1.2</td>
+    <td>02/07/2024</td>
+    <td>
+      <ul>
+        <li>Adicionado endpoint para upload de arquivos na cloudflare;<li>
+        <li>Adicionado loader de carregamento na tela de edição de publicações;</li>
+        <li>Correção da ordenação das perguntas na postagem;<li>
+        <li>Ajustes no arquivo seed para popular banco de dados com imagens de exemplo;</li>
+        <li>Adicionado voltar para o início ao clicar na logo;</li>
+        <li>Formatação da data da publicação na lista de publicações na página inicial;</li>
+        <li>Adicionado nome do autor na listagem de publicações da página inicial;<li>
+        <li>Ajustes na largura do conteúdo do cabeçalho e rodapé do site;<li>
+        <li>Adicionado página 404 quando inserido uma url invalida.<li>
+      </ul>
+    <td>
+  </tr>
+</tbody>
+</table>
+
 #### Tecnologias
 - ReactJS;
 - [Radix UI - Primitives](https://www.radix-ui.com/primitives);

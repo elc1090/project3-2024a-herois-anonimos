@@ -2,15 +2,15 @@ import { api } from '@/lib/api'
 import type { Post } from '@/utils/dto/post'
 import dayjs from 'dayjs'
 import Image from 'next/image'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
-async function getPostBySlug(slug: string): Promise<Post> {
+async function getPostBySlug(slug: string): Promise<Post | null> {
   const response = await api(`/posts?slug=${slug}`, {
     cache: 'no-store',
   })
 
   if (!response.success) {
-    redirect('404')
+    return null
   }
 
   return response.data.posts[0]
@@ -18,6 +18,10 @@ async function getPostBySlug(slug: string): Promise<Post> {
 
 export default async function Post({ params }: { params: { slug: string } }) {
   const post = await getPostBySlug(params.slug)
+
+  if (!post) {
+    notFound()
+  }
 
   return (
     <>
