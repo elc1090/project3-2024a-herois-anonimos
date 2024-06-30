@@ -1,4 +1,6 @@
+import { env } from '@/env'
 import { prisma } from '@/lib/prisma'
+import { deleteFile } from '@/lib/r2-storage'
 import { createSlugFromText } from '@/utils/slug'
 import { z } from 'zod'
 
@@ -26,6 +28,11 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
       content: post.content,
       slug: post.slug,
       questions: post.questions,
+      images: post.images.map((image) => ({
+        name: image.name,
+        type: image.type,
+        url: `${env.CLOUDFLARE_URL}/${image.url}`,
+      })),
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       author: {
@@ -46,6 +53,13 @@ const requestBodySchema = z.object({
       answer: z.string(),
     }),
   ),
+  images: z.array(
+    z.object({
+      name: z.string(),
+      type: z.string(),
+      url: z.string(),
+    }),
+  ),
 })
 
 export async function PUT(
@@ -55,7 +69,7 @@ export async function PUT(
   const id = z.string().parse(params.id)
   const body = await request.json()
 
-  const { title, content, questions } = requestBodySchema.parse(body)
+  const { title, content, questions, images } = requestBodySchema.parse(body)
 
   const post = await prisma.post.findUnique({ where: { id } })
 
@@ -89,9 +103,16 @@ export async function PUT(
         content,
         slug,
         questions,
+        images,
       },
     }),
   ])
+
+  for (const image of post.images) {
+    if (!images.some((i) => i.url === image.url)) {
+      await deleteFile({ fileUrl: image.url })
+    }
+  }
 
   return Response.json({
     post,
@@ -113,6 +134,10 @@ export async function DELETE(
       { message: 'Postagem não encontrada.' },
       { status: 404 },
     )
+  }
+
+  for (const image of post.images) {
+    await deleteFile({ fileUrl: image.url })
   }
 
   await prisma.post.delete({

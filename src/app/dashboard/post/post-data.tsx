@@ -1,6 +1,12 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ChangeEvent,
+} from 'react'
 
 import {
   CheckIcon,
@@ -10,6 +16,8 @@ import {
   ChevronUp,
   ChevronUpIcon,
   Loader2,
+  Trash2Icon,
+  UploadCloudIcon,
   X,
 } from 'lucide-react'
 import { api } from '@/lib/api'
@@ -18,12 +26,9 @@ import { toast } from 'react-toastify'
 import { useRouter, useSearchParams } from 'next/navigation'
 import * as Select from '@radix-ui/react-select'
 import { questionOptions } from '@/utils/questions'
-import type { Post } from '@/utils/dto/post'
-
-interface Questions {
-  title: string
-  answer: string
-}
+import type { Post, Questions } from '@/utils/dto/post'
+import Image from 'next/image'
+import type { File as FileDTO } from '@/utils/dto/file'
 
 export function PostData() {
   const router = useRouter()
@@ -37,6 +42,10 @@ export function PostData() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [questions, setQuestions] = useState<Questions[]>([])
+  const [images, setImages] = useState<FileDTO[]>([])
+
+  const [fileSelected, setFileSelected] = useState<File[]>([])
+  const [cover, setCover] = useState<string | null>(null)
 
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -47,6 +56,18 @@ export function PostData() {
       (qo) => !questions.find((q) => q.title === qo),
     ),
   }))
+
+  const previewUrl = useMemo(() => {
+    if (cover) {
+      return cover
+    }
+
+    if (fileSelected.length === 0) {
+      return null
+    }
+
+    return URL.createObjectURL(fileSelected[0])
+  }, [fileSelected, cover])
 
   const getPost = useCallback(async () => {
     if (!id) return
@@ -63,11 +84,26 @@ export function PostData() {
     }
 
     const post = response.data.post as Post
+
     setTitle(post.title)
     setContent(post.content)
     setQuestions(post.questions)
+    setImages(post.images)
+    setCover(post.images[0]?.url ?? null)
     setIsLoading(false)
   }, [id, router])
+
+  function handleFilesSelected(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files?.length) return
+
+    const files = Array.from(event.target.files)
+    setFileSelected(files)
+  }
+
+  function handleRemoveImage() {
+    setFileSelected([])
+    setCover(null)
+  }
 
   function handleGoBack() {
     router.back()
@@ -129,6 +165,26 @@ export function PostData() {
 
     setIsSubmitting(true)
 
+    const imagesAtt: FileDTO[] = []
+
+    if (fileSelected.length > 0) {
+      const formData = new FormData()
+      formData.append('file', fileSelected[0])
+      formData.append('directory', 'posts')
+
+      const response = await api('/uploads', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.success) {
+        toast.error(response.message)
+        return
+      }
+
+      imagesAtt.push(response.data.file)
+    }
+
     if (id) {
       const response = await api(`/posts/${id}`, {
         method: 'PUT',
@@ -136,6 +192,7 @@ export function PostData() {
           title,
           content,
           questions,
+          images: imagesAtt.length > 0 ? imagesAtt : images,
         }),
       })
 
@@ -153,6 +210,7 @@ export function PostData() {
           title,
           content,
           questions,
+          images: imagesAtt,
           authorId: user?.id,
         }),
       })
@@ -194,6 +252,47 @@ export function PostData() {
         </div>
       ) : (
         <>
+          <div className="relative col-span-2 bg-white flex h-60 w-96 rounded border p-4 shadow">
+            {!previewUrl ? (
+              <>
+                <label
+                  htmlFor="image"
+                  className="flex w-96 cursor-pointer flex-col items-center justify-center rounded border border-dashed border-primary px-4 py-14 hover:bg-muted"
+                >
+                  <UploadCloudIcon />
+                  Selecione imagem
+                </label>
+
+                <input
+                  id="image"
+                  type="file"
+                  className="sr-only"
+                  onChange={handleFilesSelected}
+                />
+              </>
+            ) : (
+              <>
+                <Image
+                  height={240}
+                  width={560}
+                  quality={100}
+                  src={previewUrl}
+                  alt=""
+                  draggable={false}
+                  className="h-full w-96 rounded object-cover"
+                />
+
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute bottom-4 right-4 size-7 flex items-center justify-center rounded-br rounded-tl bg-red-500 text-white hover:bg-red-600 transition-all"
+                >
+                  <Trash2Icon className="size-4" />
+                </button>
+              </>
+            )}
+          </div>
+
           <div className="flex flex-col gap-2 w-full">
             <div className="flex flex-col space-y-1">
               <label>Título</label>

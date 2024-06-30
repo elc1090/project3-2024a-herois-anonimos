@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { prisma } from '@/lib/prisma'
 import { createSlugFromText } from '@/utils/slug'
 import type { NextRequest } from 'next/server'
@@ -13,11 +14,19 @@ const requestBodySchema = z.object({
       answer: z.string(),
     }),
   ),
+  images: z.array(
+    z.object({
+      name: z.string(),
+      type: z.string(),
+      url: z.string(),
+    }),
+  ),
 })
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const { title, content, authorId, questions } = requestBodySchema.parse(body)
+  const { title, content, authorId, questions, images } =
+    requestBodySchema.parse(body)
 
   const author = await prisma.author.findUnique({
     where: { id: authorId },
@@ -52,6 +61,7 @@ export async function POST(request: Request) {
       slug,
       authorId,
       questions,
+      images,
     },
   })
 
@@ -88,6 +98,11 @@ export async function GET(request: NextRequest) {
       content: item.content,
       slug: item.slug,
       questions: item.questions,
+      images: item.images.map((image) => ({
+        name: image.name,
+        type: image.type,
+        url: `${env.CLOUDFLARE_URL}/${image.url}`,
+      })),
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
       author: {

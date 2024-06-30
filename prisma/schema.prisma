@@ -36,6 +36,7 @@ model Post {
   authorId String @map("author_id") @db.ObjectId
 
   questions Question[]
+  images    Image[]
 
   @@map("posts")
 }
@@ -43,4 +44,10 @@ model Post {
 type Question {
   title  String
   answer String
+}
+
+type Image {
+  name String
+  type String
+  url  String
 }

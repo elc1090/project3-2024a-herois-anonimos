@@ -1,3 +1,10 @@
+import type { File as FileDTO } from './file'
+
+export interface Questions {
+  title: string
+  answer: string
+}
+
 export interface Post {
   id: string
   title: string
@@ -7,8 +14,6 @@ export interface Post {
   author: {
     name: string
   }
-  questions: Array<{
-    title: string
-    answer: string
-  }>
+  questions: Questions[]
+  images: FileDTO[]
 }

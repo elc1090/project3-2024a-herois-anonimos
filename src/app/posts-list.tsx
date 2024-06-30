@@ -1,9 +1,9 @@
 'use client'
 import type { Post } from '@/utils/dto/post'
 
-import { faker } from '@faker-js/faker'
 import Image from 'next/image'
 import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { Pagination } from '@/components/pagination'
@@ -54,14 +54,24 @@ export function PostsList() {
           posts.map((post) => (
             <Link key={post.id} href={`/posts/${post.slug}`}>
               <article className="flex flex-col gap-2 max-w-screen-sm w-full">
-                <span className="text-sm text-slate-500">
-                  {dayjs(post.createdAt).format('DD [de] MMMM [de] YYYY')}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-slate-500">
+                    {dayjs(post.createdAt)
+                      .locale('pt-br')
+                      .format('DD [de] MMMM [de] YYYY')}
+                  </span>
+
+                  <div className="h-2 w-px bg-slate-500" />
+
+                  <span className="text-sm text-slate-500">
+                    Por {post.author.name}
+                  </span>
+                </div>
                 <h1 className="text-3xl font-bold -mt-2 leading-none line-clamp-2">
                   {post.title}
                 </h1>
                 <Image
-                  src={faker.image.urlPicsumPhotos()}
+                  src={post.images[0]?.url ?? ''}
                   width={700}
                   height={300}
                   quality={100}
