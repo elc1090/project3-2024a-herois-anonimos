@@ -84,6 +84,15 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
       </ul>
     <td>
   </tr>
+
+  <tr>
+    <td>
+      <ul>
+        <li>Correção do botão de cancelar no alerta de confirmação de exclusão.</li>
+        <li>Ajuste de responsividade de páginas e componentes.</li>
+      </ul>
+    </td>
+  </tr>
 </tbody>
 </table>
 

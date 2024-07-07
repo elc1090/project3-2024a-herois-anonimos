@@ -49,13 +49,13 @@ export function PostsList() {
 
   return (
     <>
-      <div className="flex flex-col gap-8 max-w-screen-md mx-auto items-center py-10 px-4">
+      <div className="flex flex-col gap-6 md:gap-8 max-w-screen-md mx-auto items-center py-10 px-4">
         {!isLoading &&
           posts.map((post) => (
             <Link key={post.id} href={`/posts/${post.slug}`}>
-              <article className="flex flex-col gap-2 max-w-screen-sm w-full">
+              <article className="flex flex-col gap-1.5 md:gap-2 max-w-screen-sm w-full">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-slate-500">
+                  <span className="text-xs md:text-sm text-slate-500">
                     {dayjs(post.createdAt)
                       .locale('pt-br')
                       .format('DD [de] MMMM [de] YYYY')}
@@ -63,11 +63,11 @@ export function PostsList() {
 
                   <div className="h-2 w-px bg-slate-500" />
 
-                  <span className="text-sm text-slate-500">
+                  <span className="text-xs md:text-sm text-slate-500">
                     Por {post.author.name}
                   </span>
                 </div>
-                <h1 className="text-3xl font-bold -mt-2 leading-none line-clamp-2">
+                <h1 className="text-xl md:text-3xl font-bold leading-none line-clamp-2">
                   {post.title}
                 </h1>
                 <Image
@@ -76,10 +76,10 @@ export function PostsList() {
                   height={300}
                   quality={100}
                   alt=""
-                  className="rounded-lg h-80 object-contain bg-slate-200"
+                  className="rounded-lg h-60 md:h-80 object-cover md:object-contain bg-slate-200"
                 />
 
-                <span className="line-clamp-3 text-justify">
+                <span className="line-clamp-3 text-justify text-sm md:text-base leading-tight">
                   {post.content}
                 </span>
               </article>

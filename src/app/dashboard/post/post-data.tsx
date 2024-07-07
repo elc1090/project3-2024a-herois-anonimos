@@ -232,7 +232,7 @@ export function PostData() {
   }, [id, getPost])
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full px-4 lg:px-0">
       <button
         onClick={handleGoBack}
         className="flex text-nowrap gap-2 rounded-md bg-slate-200 text-slate-900 items-center text-sm border w-min px-4 py-2 justify-center hover:bg-slate-300"
@@ -252,12 +252,12 @@ export function PostData() {
         </div>
       ) : (
         <>
-          <div className="relative col-span-2 bg-white flex h-60 w-96 rounded border p-4 shadow">
+          <div className="relative col-span-2 bg-white flex h-60 w-full md:w-96 rounded border p-4 shadow">
             {!previewUrl ? (
               <>
                 <label
                   htmlFor="image"
-                  className="flex w-96 cursor-pointer flex-col items-center justify-center rounded border border-dashed border-primary px-4 py-14 hover:bg-muted"
+                  className="flex w-full md:w-96 cursor-pointer flex-col items-center justify-center rounded border border-dashed border-primary px-4 py-14 hover:bg-muted"
                 >
                   <UploadCloudIcon />
                   Selecione imagem
@@ -279,7 +279,7 @@ export function PostData() {
                   src={previewUrl}
                   alt=""
                   draggable={false}
-                  className="h-full w-96 rounded object-cover"
+                  className="h-full w-full md:w-96 rounded object-cover"
                 />
 
                 <button
@@ -317,7 +317,7 @@ export function PostData() {
           <div className="flex flex-col gap-6 mt-4">
             {questions.map((question, idx) => (
               <div key={question.title} className="space-y-1">
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-col md:flex-row">
                   <div className="flex gap-1">
                     <button
                       className="size-6 flex items-center justify-center border border-slate-300 rounded enabled:hover:bg-slate-400 enabled:hover:text-white disabled:opacity-20"
@@ -354,21 +354,21 @@ export function PostData() {
             ))}
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-2 md:gap-4 flex-col md:flex-row">
             <Select.Root value={selected} onValueChange={setSelected}>
               <Select.Trigger className="flex justify-between items-center gap-2 bg-white px-4 h-10 py-2 rounded w-full truncate">
                 <Select.Value placeholder="Selecione uma pergunta" />
                 <Select.Icon asChild>
-                  <ChevronDown className="size-4" />
+                  <ChevronDown className="w-6 size-4" />
                 </Select.Icon>
               </Select.Trigger>
 
               <Select.Portal>
-                <Select.Content className="overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
+                <Select.Content className="overflow-hidden mx-1.5 md:mx-0 bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
                   <Select.ScrollUpButton className="flex items-center justify-center text-slate-800 h-[25px] bg-white cursor-default">
-                    <ChevronUpIcon className="size-4" />
+                    <ChevronUpIcon className="size-3 md:size-4" />
                   </Select.ScrollUpButton>
-                  <Select.Viewport className="p-2 bg-white h-10">
+                  <Select.Viewport className="p-2 bg-white md:h-10 flex flex-col gap-1">
                     {filteredOptions.map((category) => (
                       <Select.Group key={category.groupName}>
                         <Select.Label className="px-2 text-xs leading-[25px] text-slate-500 font-medium uppercase">
@@ -379,7 +379,7 @@ export function PostData() {
                           <Select.Item
                             key={question}
                             value={question}
-                            className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                            className="text-[13px] leading-none rounded-[3px] flex items-center gap-2 justify-between md:h-[25px] px-2 py-1.5 md:py-0 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
                           >
                             <Select.ItemText>{question}</Select.ItemText>
                             <Select.ItemIndicator>

@@ -38,10 +38,10 @@ export function DeleteButton({ postId, ...props }: DeleteButtonProps) {
       <AlertDialog.Trigger
         {...props}
         onClick={() => setAlertIsOpen(true)}
-        className="flex gap-2 justify-center items-center bg-red-500 px-4 py-2 rounded text-red-50 hover:bg-red-600"
+        className="flex gap-2 justify-center items-center bg-red-500 px-2 md:px-4 py-2 rounded text-red-50 hover:bg-red-600"
       >
         <Trash2Icon className="size-4" />
-        Excluir
+        <span className="hidden md:block">Excluir</span>
       </AlertDialog.Trigger>
 
       <AlertDialog.Portal>

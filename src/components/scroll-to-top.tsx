@@ -26,13 +26,13 @@ export function ScrollToTop() {
   return (
     <button
       className={twMerge(
-        'fixed bottom-4 right-4 hidden rounded-md bg-slate-500 p-2 shadow-sm hover:bg-slate-200 border border-slate-500 text-slate-100 hover:text-slate-500',
+        'fixed right-2 bottom-4 md:right-4 hidden rounded-md bg-slate-500 p-1 md:p-2 shadow-sm hover:bg-slate-200 border border-slate-500 text-slate-100 hover:text-slate-500',
         showScroll && 'flex',
       )}
     >
       <ArrowUpIcon
         onClick={scrollTop}
-        className="text-primary-red-foreground"
+        className="text-primary-red-foreground size-4 md:size-6"
       />
     </button>
   )

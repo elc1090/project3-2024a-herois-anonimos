@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import { DeleteButton } from './delete-button'
 import { EditButton } from './edit-button'
 import type { Post } from '@/utils/dto/post'
+import { LucideFilePlus } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Minhas publicações',
@@ -31,17 +32,18 @@ export default async function DashboardPage() {
   const posts = await fetchMyPosts(userId)
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full px-4 lg:px-0">
       <div className="flex justify-between">
-        <h1 className="font-bold text-slate-600 uppercase text-xl">
+        <h1 className="font-bold text-slate-600 uppercase text-lg md:text-xl">
           Minhas publicações
         </h1>
 
         <Link
           href="/dashboard/post"
-          className="border border-slate-700 text-slate-700 px-4 py-2 rounded hover:bg-slate-200"
+          className="border border-slate-700 text-slate-700 px-2 md:px-4 py-2 rounded hover:bg-slate-200"
         >
-          Criar uma publicação
+          <LucideFilePlus className="size-4 md:hidden" />
+          <span className="hidden md:block">Criar uma publicação</span>
         </Link>
       </div>
 
@@ -51,9 +53,11 @@ export default async function DashboardPage() {
             key={item.id}
             className="bg-white border border-slate-300 px-4 py-2 h-20 rounded shadow flex justify-between items-center"
           >
-            <div>
-              <h1 className="text-lg font-medium">{item.title}</h1>
-              <span className="text-sm text-slate-500">
+            <div className="flex flex-col gap-1 w-full">
+              <h1 className="text-base md:text-lg font-medium line-clamp-1 w-full">
+                {item.title}
+              </h1>
+              <span className="text-xs md:text-sm text-slate-500">
                 Publicado em{' '}
                 {dayjs(item.createdAt).format('DD [de] MMMM [de] YYYY')}
               </span>

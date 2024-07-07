@@ -32,25 +32,29 @@ export default async function Post({ params }: { params: { slug: string } }) {
           height={400}
           width={800}
           quality={100}
-          className="object-cover h-[400px] w-full"
+          className="object-cover h-[280px] md:h-[400px] w-full"
         />
       )}
-      <main className="w-full max-w-[800px] flex flex-col gap-4 mx-auto pt-4 pb-10">
-        <h2 className="text-sm text-slate-600">
+      <main className="w-full max-w-[800px] flex flex-col gap-4 mx-auto pt-4 pb-10 px-4 lg:px-0">
+        <h2 className="text-sm text-slate-600 text-center md:text-left">
           Publicado por {post.author.name} -{' '}
           {dayjs(post.createdAt).format('DD [de] MMMM [de] YYYY')}
         </h2>
-        <h1 className="text-2xl leading-tight font-bold text-slate-900">
+        <h1 className="text-xl md:text-2xl leading-tight font-bold text-slate-900 text-center md:text-left text-balance">
           {post.title}
         </h1>
-        <p className="text-base text-slate-700">{post.content}</p>
+        <p className="text-sm md:text-base text-slate-700 text-justify leading-tight">
+          {post.content}
+        </p>
 
         {post.questions.map((item) => (
-          <div key={item.title} className="flex flex-col gap-2">
-            <h2 className="font-semibold text-lg leading-none text-slate-900">
+          <div key={item.title} className="flex flex-col gap-2 mt-2">
+            <h2 className="font-semibold text-base md:text-lg leading-tight text-slate-900 text-justify">
               {item.title}
             </h2>
-            <span className="text-base text-slate-700">{item.answer}</span>
+            <span className="text-sm md:text-base text-justify leading-tight text-slate-700">
+              {item.answer}
+            </span>
           </div>
         ))}
       </main>

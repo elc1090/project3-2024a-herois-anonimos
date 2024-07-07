@@ -18,10 +18,10 @@ export function EditButton({ post }: EditButtonProps) {
   return (
     <button
       onClick={handleEdit}
-      className="flex gap-2 justify-center items-center bg-slate-100 px-4 py-2 rounded text-slate-900 hover:bg-slate-200"
+      className="flex gap-2 justify-center items-center bg-slate-100 px-2 md:px-4 py-2 rounded text-slate-900 hover:bg-slate-200"
     >
       <PenBoxIcon className="size-4" />
-      Editar
+      <span className="hidden md:block">Editar</span>
     </button>
   )
 }

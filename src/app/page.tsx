@@ -3,8 +3,10 @@ import { PostsList } from './posts-list'
 
 export default async function Home() {
   return (
-    <Suspense>
-      <PostsList />
-    </Suspense>
+    <div className="px-4 md:px-0">
+      <Suspense>
+        <PostsList />
+      </Suspense>
+    </div>
   )
 }
