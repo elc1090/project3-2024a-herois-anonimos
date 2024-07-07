@@ -55,7 +55,10 @@ export function DeleteButton({ postId, ...props }: DeleteButtonProps) {
             </AlertDialog.Description>
 
             <div className="flex justify-end gap-4">
-              <AlertDialog.Cancel className="text-slate-500 bg-white hover:bg-slate-300 border border-slate-300 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+              <AlertDialog.Cancel
+                onClick={() => setAlertIsOpen(false)}
+                className="text-slate-500 bg-white hover:bg-slate-300 border border-slate-300 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
+              >
                 Cancelar
               </AlertDialog.Cancel>
 
