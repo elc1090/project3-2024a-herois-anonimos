@@ -35,13 +35,26 @@ export async function DELETE(
   return new Response(null, { status: 204 })
 }
 
-const requestBodySchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  oldPassword: z.string().min(6).optional(),
-  password: z.string().min(6).optional(),
-  role: z.union([z.literal('ADMIN'), z.literal('USER')]).nullish(),
-})
+const requestBodySchema = z
+  .object({
+    name: z.string(),
+    email: z.string().email(),
+    oldPassword: z.string().optional(),
+    password: z.string().optional(),
+    role: z.union([z.literal('ADMIN'), z.literal('USER')]).nullish(),
+  })
+  .refine(
+    (data) => {
+      if (data.password) {
+        return data.password.length >= 6
+      }
+      return true
+    },
+    {
+      message: 'A senha deve ter no mínimo 6 dígitos.',
+      path: ['password'],
+    },
+  )
 
 export async function PUT(
   request: Request,

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { hash } from 'bcrypt'
+import { NextRequest } from 'next/server'
 import { z } from 'zod'
 
 const requestBodySchema = z.object({
@@ -42,8 +43,15 @@ export async function POST(request: Request) {
   )
 }
 
-export async function GET() {
-  const authors = await prisma.author.findMany()
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams
+  const page = searchParams.get('page') ?? undefined
+
+  const authors = await prisma.author.findMany({
+    orderBy: { name: 'asc' },
+    take: page ? 10 : undefined,
+    skip: page ? (Number(page) - 1) * 10 : undefined,
+  })
 
   const authorsWithoutPassword = authors.map((author) => ({
     ...author,
