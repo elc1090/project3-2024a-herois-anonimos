@@ -90,6 +90,10 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
       <ul>
         <li>Correção do botão de cancelar no alerta de confirmação de exclusão.</li>
         <li>Ajuste de responsividade de páginas e componentes.</li>
+        <li>Adicionado administradores.</li>
+        <li>Adicionado menu de gerenciamento.</li>
+        <li>Adicionado gerenciamento de publicações.</li>
+        <li>Adicionado gerenciamento de usuários.</li>
       </ul>
     </td>
   </tr>
