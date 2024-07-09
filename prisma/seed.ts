@@ -18,6 +18,7 @@ async function seed() {
       name: faker.person.fullName(),
       email: 'john@example.com',
       password: hashedPassword,
+      role: 'ADMIN',
     },
   })
 
@@ -26,6 +27,7 @@ async function seed() {
       name: faker.person.fullName(),
       email: faker.internet.email(),
       password: hashedPassword,
+      role: 'USER',
     },
   })
 
@@ -34,6 +36,7 @@ async function seed() {
       name: faker.person.fullName(),
       email: faker.internet.email(),
       password: hashedPassword,
+      role: 'USER',
     },
   })
 

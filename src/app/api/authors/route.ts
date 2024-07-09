@@ -6,11 +6,12 @@ const requestBodySchema = z.object({
   name: z.string(),
   email: z.string(),
   password: z.string().min(6),
+  role: z.union([z.literal('ADMIN'), z.literal('USER')]).nullish(),
 })
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const { name, email, password } = requestBodySchema.parse(body)
+  const { name, email, password, role } = requestBodySchema.parse(body)
   const authorExists = await prisma.author.findUnique({
     where: {
       email,
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
       name,
       email,
       password: passwordHash,
+      role: role ?? 'USER',
     },
   })
 

@@ -40,6 +40,7 @@ const requestBodySchema = z.object({
   email: z.string().email(),
   oldPassword: z.string().min(6).optional(),
   password: z.string().min(6).optional(),
+  role: z.union([z.literal('ADMIN'), z.literal('USER')]).nullish(),
 })
 
 export async function PUT(
@@ -49,7 +50,8 @@ export async function PUT(
   const id = z.string().parse(params.id)
   const body = await request.json()
 
-  const { name, email, oldPassword, password } = requestBodySchema.parse(body)
+  const { name, email, oldPassword, password, role } =
+    requestBodySchema.parse(body)
 
   const author = await prisma.author.findUnique({ where: { id } })
 
@@ -78,6 +80,7 @@ export async function PUT(
     data: {
       name,
       email,
+      role: role ?? undefined,
       password: password ? await hash(password, 8) : undefined,
     },
   })

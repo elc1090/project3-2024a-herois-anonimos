@@ -106,13 +106,25 @@ export function Header() {
               Início
             </Link>
 
-            <Link
-              href="/dashboard"
-              data-active={pathname === '/dashboard'}
-              className="text-slate-300 data-[active=true]:text-slate-50 data-[active=true]:underline underline-offset-4 text-center lg:text-left"
-            >
-              Minhas publicações
-            </Link>
+            {user && (
+              <Link
+                href="/dashboard"
+                data-active={pathname === '/dashboard'}
+                className="text-slate-300 data-[active=true]:text-slate-50 data-[active=true]:underline underline-offset-4 text-center lg:text-left"
+              >
+                Minhas publicações
+              </Link>
+            )}
+
+            {user?.role === 'ADMIN' && (
+              <Link
+                href="/dashboard/settings"
+                data-active={pathname === '/dashboard/settings'}
+                className="text-slate-300 data-[active=true]:text-slate-50 data-[active=true]:underline underline-offset-4 text-center lg:text-left"
+              >
+                Gerenciamento
+              </Link>
+            )}
           </div>
 
           <div className="flex justify-center lg:ml-auto">
