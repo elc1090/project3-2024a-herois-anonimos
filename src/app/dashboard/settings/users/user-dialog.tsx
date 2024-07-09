@@ -67,6 +67,7 @@ export function UserDialog({ authorId, onClose }: UserDialogProps) {
   const {
     control,
     register,
+    reset,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<UserDialogFormData>({
@@ -148,6 +149,10 @@ export function UserDialog({ authorId, onClose }: UserDialogProps) {
       getUser()
     }
   }, [authorId, getUser])
+
+  useEffect(() => {
+    reset()
+  }, [reset])
 
   return (
     <Dialog.Portal>
@@ -289,7 +294,7 @@ export function UserDialog({ authorId, onClose }: UserDialogProps) {
               {isSubmitting ? (
                 <Loader2Icon className="size-4 animate-spin" />
               ) : (
-                'Criar conta'
+                `${authorId ? 'Atualizar' : 'Criar'} 'conta'`
               )}
             </button>
           </form>
