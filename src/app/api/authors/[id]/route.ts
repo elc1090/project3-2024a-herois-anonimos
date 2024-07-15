@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { deleteFile } from '@/lib/r2-storage'
 import { compare, hash } from 'bcrypt'
 import { z } from 'zod'
 
@@ -30,7 +31,18 @@ export async function DELETE(
     )
   }
 
-  await prisma.author.delete({ where: { id } })
+  const posts = await prisma.post.findMany({ where: { authorId: id } })
+
+  await prisma.$transaction([
+    prisma.post.deleteMany({ where: { authorId: id } }),
+    prisma.author.delete({ where: { id } }),
+  ])
+
+  for (const post of posts) {
+    for (const image of post.images) {
+      await deleteFile({ fileUrl: image.url })
+    }
+  }
 
   return new Response(null, { status: 204 })
 }

@@ -125,6 +125,7 @@ Para acessar como um usuário sem as permissões de administrador, crie uma nova
         <li>Ajuste de estilo do loader de carregamento da página 'minhas publicações'.</li>
         <li>Removido elemento da imagem no card de publicações quando a publicação não tem uma imagem.</li>
         <li>Removida a animação de progresso das mensagens de alerta.</li>
+        <li>Deletar publicações e suas respectivas imagens ao deletar usuário.</li>
       </ul>
     </td>
   </tr>
