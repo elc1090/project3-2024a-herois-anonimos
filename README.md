@@ -115,6 +115,7 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
         <li>Adicionado a criação das perguntas padrões no 'seed' do banco de dados.</li>
         <li>Adicionado opção de adicionar pergunta personalizada no menu de perguntas na página de criação/edição de publicação.<li>
         <li>Ajuste de estilo do loader de carregamento da página 'minhas publicações'.</li>
+        <li>Removido elemento da imagem no card de publicações quando a publicação não tem uma imagem.</li>
       </ul>
     </td>
   </tr>

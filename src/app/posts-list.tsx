@@ -52,8 +52,8 @@ export function PostsList() {
       <div className="flex flex-col gap-6 md:gap-8 max-w-screen-md mx-auto items-center py-10 px-4">
         {!isLoading &&
           posts.map((post) => (
-            <Link key={post.id} href={`/posts/${post.slug}`}>
-              <article className="flex flex-col gap-1.5 md:gap-2 max-w-screen-sm w-full">
+            <Link key={post.id} href={`/posts/${post.slug}`} className="w-full">
+              <article className="flex flex-col gap-1.5 md:gap-2 max-w-screen-sm">
                 <div className="flex items-center gap-2">
                   <span className="text-xs md:text-sm text-slate-500">
                     {dayjs(post.createdAt)
@@ -70,14 +70,16 @@ export function PostsList() {
                 <h1 className="text-xl md:text-3xl font-bold leading-none line-clamp-2">
                   {post.title}
                 </h1>
-                <Image
-                  src={post.images[0]?.url ?? ''}
-                  width={700}
-                  height={300}
-                  quality={100}
-                  alt=""
-                  className="rounded-lg h-60 md:h-80 object-cover md:object-contain bg-slate-200"
-                />
+                {!!post.images.length && (
+                  <Image
+                    src={post.images[0].url}
+                    width={700}
+                    height={300}
+                    quality={100}
+                    alt=""
+                    className="rounded-lg h-60 md:h-80 object-cover md:object-contain bg-slate-200"
+                  />
+                )}
 
                 <span className="line-clamp-2 text-sm md:text-base leading-tight">
                   {post.content}
