@@ -51,8 +51,8 @@ export function PostsList() {
         <thead className="w-full h-10 bg-slate-200">
           <tr className="w-full uppercase">
             <th className="p-4 text-left w-full">Titulo</th>
-            <th className="p-4 w-72">Publicado em</th>
-            <th className="p-4 w-64">Autor(a)</th>
+            <th className="p-4 w-72 hidden lg:table-cell">Publicado em</th>
+            <th className="p-4 w-64 hidden lg:table-cell">Autor(a)</th>
             <th className="p-4 w-20">Ações</th>
           </tr>
         </thead>
@@ -61,11 +61,24 @@ export function PostsList() {
           {!isLoading &&
             posts.map((post) => (
               <tr key={post.id} className="border-b last:border-b-0">
-                <td className="p-4 w-full">{post.title}</td>
-                <td className="p-4 text-center">
+                <td className="p-4 w-full">
+                  <div className="flex flex-col gap-1">
+                    <span className="w-full">{post.title}</span>
+                    <div className="flex gap-1.5 lg:hidden items-center">
+                      <span className="text-xs">Por {post.author.name}</span>
+                      <span className="text-xs">-</span>
+                      <span className="text-xs">
+                        {dayjs(post.createdAt).format('DD/MM/YYYY')}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td className="p-4 text-center hidden lg:table-cell">
                   {dayjs(post.createdAt).format('DD/MM/YYYY')}
                 </td>
-                <td className="p-4 truncate text-center">{post.author.name}</td>
+                <td className="p-4 truncate text-center hidden lg:table-cell">
+                  {post.author.name}
+                </td>
                 <td className="p-4 flex gap-2 items-center justify-between">
                   <EditButton post={post} />
 
@@ -76,14 +89,14 @@ export function PostsList() {
 
           {isLoading &&
             Array.from({ length: 10 }).map((_, idx) => (
-              <tr key={idx} className="h-14">
-                <td className="pl-4 p-2 w-full">
+              <tr key={idx} className="h-14 w-full">
+                <td className="pl-4 p-2 w-96">
                   <div className="bg-slate-300 animate-pulse h-8 rounded w-full" />
                 </td>
-                <td className="p-2 w-72">
+                <td className="p-2 w-72 hidden lg:table-cell">
                   <div className="bg-slate-300 animate-pulse h-8 rounded w-full" />
                 </td>
-                <td className="p-2 w-80">
+                <td className="p-2 w-80 hidden lg:table-cell">
                   <div className="bg-slate-300 animate-pulse h-8 rounded w-full" />
                 </td>
                 <td className="pr-4 p-2 w-20">

@@ -106,6 +106,7 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
     <td>
       <ul>
         <li>Ajuste das margens na tela de configurações.</li>
+        <li>Ajuste de layout para versão de celular.</li>
       </ul>
     </td>
   </tr>
