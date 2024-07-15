@@ -132,12 +132,39 @@ Para acessar como um usuário sem as permissões de administrador, crie uma nova
 </tbody>
 </table>
 
+#### Rotas API
+**Authors**
+- ``POST /authors`` - Cadastra novos usuários
+- ``GET /authors`` - Retorna todos os usuários
+- ``GET /authors/:id`` - Busca os dados do usuário pelo id
+- ``PUT /authors/:id`` - Atualiza os dados do usuário pelo id
+- ``DELETE /authors/:id`` - Remove um usuário pelo id
+
+**Sessions**
+- ``POST /sessions`` - Recupera um token (JWT) de autenticação na aplicação.
+
+**Posts**
+- ``POST /posts`` - Cadastra uma nova publicação
+- ``GET /posts`` - Retorna todas as publicações. Aceita parâmetro na rota para buscar por autor e por slug, basta informar `?author=nome` ou `?slug=test` na URL.
+- ``GET /posts/:id`` - Busca por uma publicação pelo id.
+- ``PUT /posts/:id`` - Atualiza os dados de uma publicação pelo id.
+- ``DELETE /posts`` - Remove uma publicação pelo id.
+
+**Questions**
+- ``POST /questions`` - Adiciona uma pergunta pré-definida para os autores utilização dos autores.
+- ``GET /questions`` - Lista todas as perguntas pré-definidas.
+- ``DELETE /questions`` - Remove uma pergunta pre-definida pelo id.
+
+**Uploads**
+- ``POST /uploads`` - Adiciona um arquivo no serviço de armazenamento.
+
 #### Tecnologias
 - ReactJS;
 - [Radix UI - Primitives](https://www.radix-ui.com/primitives);
 - [TailwindCSS](https://tailwindcss.com/);
 - [NextJS](https://nextjs.org);
 - [MongoDB](https://www.mongodb.com/).
+- [R2 - Cloudflare](https://www.cloudflare.com/pt-br/developer-platform/r2/)
 
 #### Ambiente de desenvolvimento
 - VSCode;
