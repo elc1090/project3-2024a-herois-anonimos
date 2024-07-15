@@ -23,6 +23,11 @@ A aplicação conta com perguntas pré definidas que podem ser incluídas, visan
 #### Desenvolvimento
 O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento, mas mantendo uma interface simples e de fácil entendimento.
 
+### Acesso de teste
+#### Usuário administrador
+<p><strong>E-mail:</strong> john@example.com</p>
+<p><strong>Senha:</strong> 123456</p>
+
 ## Atualizações
 <table class="table table-bordered table-hover table-condensed">
   <thead>
