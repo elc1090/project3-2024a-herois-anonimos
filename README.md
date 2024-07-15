@@ -18,18 +18,94 @@ Wederson Fagundes, Sistemas de Informação
 
 #### Descrição
 O objetivo da aplicação é dar visibilidade para histórias de voluntários que auxiliaram durante as enchentes no RS e aos que estão ajudando na reconstrução do Rio Grande do Sul. Para utilizar basta criar uma conta e publicar os relatos.
-A aplicação conta com perguntas pré definidas que podem ser incluídas, visando direcionar com que o conteúdo das publicações postadas sigam o mesmo viés.
+A aplicação conta com perguntas predefinidas que podem ser incluídas, visando direcionar com que o conteúdo das publicações postadas sigam o mesmo viés.
 
 #### Desenvolvimento
 O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento, mas mantendo uma interface simples e de fácil entendimento.
 
-### Acesso de teste
+### Testes
+Para testar a aplicação existem dois tipos de usuários "administradores" e "usuários".<br>
+Na seção <a href="#funcionalidades">funcionalidades</a> é possível visualizar todas as funcionalidades disponíveis no sistema que podem ser testadas.
+
+Dados de acesso:<br>
+**Administrador**:
+>- **E-mail:** john@example.com
+>- **Senha:** 123456
+
+**Usuário autor**:
+Além do usuário abaixo, é possível criar uma conta. Todas as contas criadas através do formulário de cadastro são adicionadas como usuário comum, ou seja, autores.
+>- **E-mail:** julio.von@example.com
+>- **Senha:** 123456
+
+### Rotas API
+**Authors**
+- ``POST /authors`` - Cadastra novos usuários
+- ``GET /authors`` - Retorna todos os usuários
+- ``GET /authors/:id`` - Busca os dados do usuário pelo id
+- ``PUT /authors/:id`` - Atualiza os dados do usuário pelo id
+- ``DELETE /authors/:id`` - Remove um usuário pelo id
+
+**Sessions**
+- ``POST /sessions`` - Recupera um token (JWT) de autenticação na aplicação.
+
+**Posts**
+- ``POST /posts`` - Cadastra uma nova publicação
+- ``GET /posts`` - Retorna todas as publicações. Aceita parâmetro na rota para buscar por autor e por slug, basta informar `?author=nome` ou `?slug=test` na URL.
+- ``GET /posts/:id`` - Busca por uma publicação pelo id.
+- ``PUT /posts/:id`` - Atualiza os dados de uma publicação pelo id.
+- ``DELETE /posts`` - Remove uma publicação pelo id.
+
+**Questions**
+- ``POST /questions`` - Adiciona uma pergunta predefinida para os autores utilização dos autores.
+- ``GET /questions`` - Lista todas as perguntas predefinidas.
+- ``DELETE /questions`` - Remove uma pergunta predefinida pelo id.
+
+**Uploads**
+- ``POST /uploads`` - Adiciona um arquivo no serviço de armazenamento.
+
+
+### Funcionalidades
+**Visitantes**
+- Visualizar todas publicações;
+- Visualizar uma publicação específica com acesso pelo slug;
+- Cadastrar uma nova conta como autor(a);
+- Realizar autenticação no sistema.
+
+**Usuários**
+- Todas funcionalidades de visitantes;
+- Acessar dashboard com listagem das suas próprias publicações;
+- Criar novas publicações:
+  - Adicionar imagem na publicação;
+  - Adicionar título e descrição;
+  - Adicionar perguntas predefinidas pelos administradores;
+  - Inserir uma pergunta customizada.
+- Editar próprias publicações;
+- Remover próprias publicações.
+
+**Administradores**
+- Todas funcionalidades de usuários;
+- Acesso aos painel de gerenciamento;
+- Gerenciamento de usuários:
+  - Listar todos os usuários do sistema;
+  - Adicionar novo usuário (administrador/autor) no sistema;
+  - Atualizar usuário;
+  - Remover usuário.
+- Gerenciamento de publicações:
+  - Listar todas as publicações do sistema;
+  - Atualizar publicação;
+  - Remover publicação;
+- Gerenciamento de perguntas (predefinidas):
+  - Listar todas as perguntas por categorias;
+  - Adicionar nova pergunta em uma categoria específica;
+  - Remover pergunta.
+
 #### Administrador
 <p><strong>E-mail:</strong> john@example.com</p>
 <p><strong>Senha:</strong> 123456</p>
 
 #### Usuário comum
 Para acessar como um usuário sem as permissões de administrador, crie uma nova conta.
+
 
 ## Atualizações
 <table class="table table-bordered table-hover table-condensed">
@@ -116,10 +192,10 @@ Para acessar como um usuário sem as permissões de administrador, crie uma nova
         <li>Ajuste das margens na tela de configurações.</li>
         <li>Ajuste de layout para versão de celular.</li>
         <li>Ajuste de alinhamento de texto para esquerda na descrição e respostas das publicações.</li>
-        <li>Adicionado gerenciamento de perguntas pré-definidas.</li>
+        <li>Adicionado gerenciamento de perguntas predefinidas.</li>
         <li>Alterado a listagem fixa de perguntas ao gerenciar uma publicação, para listagem cadastradas no banco de dados.</li>
         <li>Adicionado loader de carregamento das perguntas na página de criação/edição de publicação.</li>
-        <li>Removido arquivo estático com perguntas pré-definidas</li>
+        <li>Removido arquivo estático com perguntas predefinidas</li>
         <li>Adicionado a criação das perguntas padrões no 'seed' do banco de dados.</li>
         <li>Adicionado opção de adicionar pergunta personalizada no menu de perguntas na página de criação/edição de publicação.<li>
         <li>Ajuste de estilo do loader de carregamento da página 'minhas publicações'.</li>
@@ -131,32 +207,6 @@ Para acessar como um usuário sem as permissões de administrador, crie uma nova
   </tr>
 </tbody>
 </table>
-
-#### Rotas API
-**Authors**
-- ``POST /authors`` - Cadastra novos usuários
-- ``GET /authors`` - Retorna todos os usuários
-- ``GET /authors/:id`` - Busca os dados do usuário pelo id
-- ``PUT /authors/:id`` - Atualiza os dados do usuário pelo id
-- ``DELETE /authors/:id`` - Remove um usuário pelo id
-
-**Sessions**
-- ``POST /sessions`` - Recupera um token (JWT) de autenticação na aplicação.
-
-**Posts**
-- ``POST /posts`` - Cadastra uma nova publicação
-- ``GET /posts`` - Retorna todas as publicações. Aceita parâmetro na rota para buscar por autor e por slug, basta informar `?author=nome` ou `?slug=test` na URL.
-- ``GET /posts/:id`` - Busca por uma publicação pelo id.
-- ``PUT /posts/:id`` - Atualiza os dados de uma publicação pelo id.
-- ``DELETE /posts`` - Remove uma publicação pelo id.
-
-**Questions**
-- ``POST /questions`` - Adiciona uma pergunta pré-definida para os autores utilização dos autores.
-- ``GET /questions`` - Lista todas as perguntas pré-definidas.
-- ``DELETE /questions`` - Remove uma pergunta pre-definida pelo id.
-
-**Uploads**
-- ``POST /uploads`` - Adiciona um arquivo no serviço de armazenamento.
 
 #### Tecnologias
 - ReactJS;
