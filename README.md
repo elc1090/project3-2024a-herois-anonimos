@@ -108,6 +108,11 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
         <li>Ajuste das margens na tela de configurações.</li>
         <li>Ajuste de layout para versão de celular.</li>
         <li>Ajuste de alinhamento de texto para esquerda na descrição e respostas das publicações.</li>
+        <li>Adicionado gerenciamento de perguntas pré-definidas.</li>
+        <li>Alterado a listagem fixa de perguntas ao gerenciar uma publicação, para listagem cadastradas no banco de dados.</li>
+        <li>Adicionado loader de carregamento das perguntas na página de criação/edição de publicação.</li>
+        <li>Removido arquivo estático com perguntas pré-definidas</li>
+        <li>Adicionado a criação das perguntas padrões no 'seed' do banco de dados.</li>
       </ul>
     </td>
   </tr>

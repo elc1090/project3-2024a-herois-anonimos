@@ -38,11 +38,11 @@ export async function api(path: string, init?: RequestInit) {
     }
   }
 
-  const { message } = await response.json()
+  const data = await response.json()
   return {
     success: false,
     data: null,
-    message,
+    message: data?.message ?? 'Erro interno no servidor.',
     errors: null,
   }
 }

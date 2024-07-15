@@ -26,6 +26,13 @@ export default function SettingsPage() {
         >
           <h2>Gerenciar publicações</h2>
         </Link>
+
+        <Link
+          href="/dashboard/settings/questions"
+          className="px-4 py-2 flex items-center justify-center h-20 w-96 bg-white rounded shadow-sm hover:bg-slate-50 hover:border hover:border-slate-500"
+        >
+          <h2>Gerenciar perguntas</h2>
+        </Link>
       </div>
     </div>
   )

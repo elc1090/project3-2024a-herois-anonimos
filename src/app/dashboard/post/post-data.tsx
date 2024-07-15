@@ -16,6 +16,7 @@ import {
   ChevronUp,
   ChevronUpIcon,
   Loader2,
+  Loader2Icon,
   Trash2Icon,
   UploadCloudIcon,
   X,
@@ -25,10 +26,11 @@ import { useAuth } from '@/contexts/auth'
 import { toast } from 'react-toastify'
 import { useRouter, useSearchParams } from 'next/navigation'
 import * as Select from '@radix-ui/react-select'
-import { questionOptions } from '@/utils/questions'
 import type { Post, Questions } from '@/utils/dto/post'
 import Image from 'next/image'
 import type { File as FileDTO } from '@/utils/dto/file'
+import { groupQuestionsByCategory } from '@/utils/group-questions-by-category'
+import { QuestionsGroupedByCategory } from '@/utils/dto/question'
 
 export function PostData() {
   const router = useRouter()
@@ -44,6 +46,12 @@ export function PostData() {
   const [questions, setQuestions] = useState<Questions[]>([])
   const [images, setImages] = useState<FileDTO[]>([])
 
+  const [questionOptions, setQuestionsOptions] = useState<
+    QuestionsGroupedByCategory[]
+  >([])
+  const [isLoadingQuestionOptions, setIsLoadingQuestionOptions] =
+    useState(false)
+
   const [fileSelected, setFileSelected] = useState<File[]>([])
   const [cover, setCover] = useState<string | null>(null)
 
@@ -53,7 +61,7 @@ export function PostData() {
   const filteredOptions = questionOptions.map((item) => ({
     ...item,
     questions: item.questions.filter(
-      (qo) => !questions.find((q) => q.title === qo),
+      (qo) => !questions.find((q) => q.title === qo.title),
     ),
   }))
 
@@ -92,6 +100,21 @@ export function PostData() {
     setCover(post.images[0]?.url ?? null)
     setIsLoading(false)
   }, [id, router])
+
+  const getQuestions = useCallback(async () => {
+    setIsLoadingQuestionOptions(true)
+    const response = await api('/questions', {
+      cache: 'no-cache',
+    })
+
+    if (!response.success) {
+      setIsLoadingQuestionOptions(false)
+      return toast.error(response.message)
+    }
+
+    setQuestionsOptions(groupQuestionsByCategory(response.data.questions))
+    setIsLoadingQuestionOptions(false)
+  }, [])
 
   function handleFilesSelected(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files?.length) return
@@ -229,7 +252,9 @@ export function PostData() {
     if (id) {
       getPost()
     }
-  }, [id, getPost])
+
+    getQuestions()
+  }, [id, getPost, getQuestions])
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 lg:px-0">
@@ -355,67 +380,80 @@ export function PostData() {
           </div>
 
           <div className="flex gap-2 md:gap-4 flex-col md:flex-row">
-            <Select.Root value={selected} onValueChange={setSelected}>
-              <Select.Trigger className="flex justify-between items-center gap-2 bg-white px-4 h-10 py-2 rounded w-full truncate">
-                <Select.Value placeholder="Selecione uma pergunta" />
-                <Select.Icon asChild>
-                  <ChevronDown className="w-6 size-4" />
-                </Select.Icon>
-              </Select.Trigger>
+            {isLoadingQuestionOptions ? (
+              <div className="flex gap-2 w-full items-center">
+                <Loader2Icon className="size-4 animate-spin" />
+                <span className="text-slate-700">
+                  Carregando opções de perguntas
+                </span>
+              </div>
+            ) : (
+              <>
+                <Select.Root value={selected} onValueChange={setSelected}>
+                  <Select.Trigger className="flex justify-between items-center gap-2 bg-white px-4 h-10 py-2 rounded w-full truncate">
+                    <Select.Value placeholder="Selecione uma pergunta" />
+                    <Select.Icon asChild>
+                      <ChevronDown className="w-6 size-4" />
+                    </Select.Icon>
+                  </Select.Trigger>
 
-              <Select.Portal>
-                <Select.Content className="overflow-hidden mx-1.5 md:mx-0 bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-                  <Select.ScrollUpButton className="flex items-center justify-center text-slate-800 h-[25px] bg-white cursor-default">
-                    <ChevronUpIcon className="size-3 md:size-4" />
-                  </Select.ScrollUpButton>
-                  <Select.Viewport className="p-2 bg-white md:h-10 flex flex-col gap-1">
-                    {filteredOptions.map((category) => (
-                      <Select.Group key={category.groupName}>
-                        <Select.Label className="px-2 text-xs leading-[25px] text-slate-500 font-medium uppercase">
-                          {category.groupName}
-                        </Select.Label>
+                  <Select.Portal>
+                    <Select.Content className="overflow-hidden mx-1.5 md:mx-0 bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
+                      <Select.ScrollUpButton className="flex items-center justify-center text-slate-800 h-[25px] bg-white cursor-default">
+                        <ChevronUpIcon className="size-3 md:size-4" />
+                      </Select.ScrollUpButton>
+                      <Select.Viewport className="p-2 bg-white md:h-10 flex flex-col gap-1">
+                        {filteredOptions.map((category) => (
+                          <Select.Group key={category.category}>
+                            <Select.Label className="px-2 text-xs leading-[25px] text-slate-500 font-medium uppercase">
+                              {category.category}
+                            </Select.Label>
 
-                        {category.questions.map((question) => (
-                          <Select.Item
-                            key={question}
-                            value={question}
-                            className="text-[13px] leading-none rounded-[3px] flex items-center gap-2 justify-between md:h-[25px] px-2 py-1.5 md:py-0 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
-                          >
-                            <Select.ItemText>{question}</Select.ItemText>
-                            <Select.ItemIndicator>
-                              <CheckIcon className="size-4" />
-                            </Select.ItemIndicator>
-                          </Select.Item>
+                            {category.questions.map((question) => (
+                              <Select.Item
+                                key={question.id}
+                                value={question.title}
+                                className="text-[13px] leading-none rounded-[3px] flex items-center gap-2 justify-between md:h-[25px] px-2 py-1.5 md:py-0 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                              >
+                                <Select.ItemText>
+                                  {question.title}
+                                </Select.ItemText>
+                                <Select.ItemIndicator>
+                                  <CheckIcon className="size-4" />
+                                </Select.ItemIndicator>
+                              </Select.Item>
+                            ))}
+                            {category.questions.length === 0 && (
+                              <Select.Item
+                                disabled
+                                value="empty"
+                                className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                              >
+                                <Select.ItemText>
+                                  Todas as perguntas da categoria já foram
+                                  selecionadas.
+                                </Select.ItemText>
+                              </Select.Item>
+                            )}
+                          </Select.Group>
                         ))}
-                        {category.questions.length === 0 && (
-                          <Select.Item
-                            disabled
-                            value="empty"
-                            className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
-                          >
-                            <Select.ItemText>
-                              Todas as perguntas da categoria já foram
-                              selecionadas.
-                            </Select.ItemText>
-                          </Select.Item>
-                        )}
-                      </Select.Group>
-                    ))}
-                  </Select.Viewport>
-                  <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-slate-800 cursor-default">
-                    <ChevronDownIcon className="size-4" />
-                  </Select.ScrollDownButton>
-                </Select.Content>
-              </Select.Portal>
-            </Select.Root>
+                      </Select.Viewport>
+                      <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-slate-800 cursor-default">
+                        <ChevronDownIcon className="size-4" />
+                      </Select.ScrollDownButton>
+                    </Select.Content>
+                  </Select.Portal>
+                </Select.Root>
 
-            <button
-              className="bg-slate-200 px-4 py-2 flex items-center justify-center rounded enabled:hover:bg-slate-300 disabled:opacity-30"
-              onClick={handleAddQuestion}
-              disabled={!selected.length}
-            >
-              Adicionar
-            </button>
+                <button
+                  className="bg-slate-200 px-4 py-2 flex items-center justify-center rounded enabled:hover:bg-slate-300 disabled:opacity-30"
+                  onClick={handleAddQuestion}
+                  disabled={!selected.length}
+                >
+                  Adicionar
+                </button>
+              </>
+            )}
           </div>
 
           <button

@@ -3,13 +3,14 @@ import { faker } from '@faker-js/faker'
 import { hash } from 'bcrypt'
 import { createSlugFromText } from '../src/utils/slug'
 
-import { posts } from './data.json'
+import { posts, questions } from './data.json'
 
 const prisma = new PrismaClient()
 
 async function seed() {
   await prisma.post.deleteMany()
   await prisma.author.deleteMany()
+  await prisma.questions.deleteMany()
 
   const hashedPassword = await hash('123456', 1)
 
@@ -80,6 +81,15 @@ async function seed() {
           to: new Date(),
         }),
       },
+    })
+  }
+
+  for (const item of questions) {
+    await prisma.questions.createMany({
+      data: item.questions.map((question) => ({
+        category: item.category,
+        title: question,
+      })),
     })
   }
 }
