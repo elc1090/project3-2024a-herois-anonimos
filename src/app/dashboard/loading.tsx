@@ -1,19 +1,10 @@
-import Link from 'next/link'
-
 export default async function DashboardPage() {
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full px-4 lg:px-0">
       <div className="flex justify-between">
-        <h1 className="font-bold text-slate-600 uppercase text-xl">
+        <h1 className="font-bold text-slate-600 uppercase text-lg md:text-xl">
           Minhas publicações
         </h1>
-
-        <Link
-          href="/dashboard/post"
-          className="border border-slate-700 text-slate-700 px-4 py-2 rounded hover:bg-slate-200"
-        >
-          Criar uma publicação
-        </Link>
       </div>
 
       <div className="flex flex-col w-full gap-2">
