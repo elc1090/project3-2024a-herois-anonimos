@@ -68,7 +68,7 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
   </tr>
 
   <tr>
-   <td align="right">0.1.2</td>
+    <td align="right">0.1.2</td>
     <td>02/07/2024</td>
     <td>
       <ul>
@@ -86,6 +86,8 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
   </tr>
 
   <tr>
+    <td align="right">0.1.3</td>
+    <td>09/07/2024</td>
     <td>
       <ul>
         <li>Correção do botão de cancelar no alerta de confirmação de exclusão.</li>
@@ -94,6 +96,16 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
         <li>Adicionado menu de gerenciamento.</li>
         <li>Adicionado gerenciamento de publicações.</li>
         <li>Adicionado gerenciamento de usuários.</li>
+      </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="right">1.0.0</td>
+    <td>12/07/2024</td>
+    <td>
+      <ul>
+        <li>Ajuste das margens na tela de configurações.</li>
       </ul>
     </td>
   </tr>
