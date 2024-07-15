@@ -45,6 +45,7 @@ export function PostData() {
   const [content, setContent] = useState('')
   const [questions, setQuestions] = useState<Questions[]>([])
   const [images, setImages] = useState<FileDTO[]>([])
+  const [customQuestion, setCustomQuestion] = useState('')
 
   const [questionOptions, setQuestionsOptions] = useState<
     QuestionsGroupedByCategory[]
@@ -137,10 +138,14 @@ export function PostData() {
       ...prev,
       {
         id: null,
-        title: selected,
+        title: selected === 'custom' ? customQuestion : selected,
         answer: '',
       },
     ])
+
+    if (selected === 'custom') {
+      setCustomQuestion('')
+    }
     setSelected('')
   }
 
@@ -255,6 +260,12 @@ export function PostData() {
 
     getQuestions()
   }, [id, getPost, getQuestions])
+
+  useEffect(() => {
+    if (selected !== 'custom') {
+      setCustomQuestion('')
+    }
+  }, [selected])
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 lg:px-0">
@@ -379,7 +390,7 @@ export function PostData() {
             ))}
           </div>
 
-          <div className="flex gap-2 md:gap-4 flex-col md:flex-row">
+          <>
             {isLoadingQuestionOptions ? (
               <div className="flex gap-2 w-full items-center">
                 <Loader2Icon className="size-4 animate-spin" />
@@ -388,76 +399,121 @@ export function PostData() {
                 </span>
               </div>
             ) : (
-              <>
-                <Select.Root value={selected} onValueChange={setSelected}>
-                  <Select.Trigger className="flex justify-between items-center gap-2 bg-white px-4 h-10 py-2 rounded w-full truncate">
-                    <Select.Value placeholder="Selecione uma pergunta" />
-                    <Select.Icon asChild>
-                      <ChevronDown className="w-6 size-4" />
-                    </Select.Icon>
-                  </Select.Trigger>
+              <div className="flex flex-col gap-4 lg:flex-row w-full">
+                <div className="flex flex-col gap-2 w-full max-w-[900px]">
+                  <Select.Root value={selected} onValueChange={setSelected}>
+                    <Select.Trigger className="flex justify-between items-center gap-2 bg-white px-4 h-10 py-2 rounded w-full truncate">
+                      <Select.Value placeholder="Selecione uma pergunta" />
+                      <Select.Icon asChild>
+                        <ChevronDown className="w-6 size-4" />
+                      </Select.Icon>
+                    </Select.Trigger>
 
-                  <Select.Portal>
-                    <Select.Content className="overflow-hidden mx-1.5 md:mx-0 bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-                      <Select.ScrollUpButton className="flex items-center justify-center text-slate-800 h-[25px] bg-white cursor-default">
-                        <ChevronUpIcon className="size-3 md:size-4" />
-                      </Select.ScrollUpButton>
-                      <Select.Viewport className="p-2 bg-white md:h-10 flex flex-col gap-1">
-                        {filteredOptions.map((category) => (
-                          <Select.Group key={category.category}>
+                    <Select.Portal>
+                      <Select.Content className="overflow-hidden mx-1.5 md:mx-0 bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
+                        <Select.ScrollUpButton className="flex items-center justify-center text-slate-800 h-[25px] bg-white cursor-default">
+                          <ChevronUpIcon className="size-3 md:size-4" />
+                        </Select.ScrollUpButton>
+                        <Select.Viewport className="p-2 bg-white md:h-10 flex flex-col gap-1">
+                          {filteredOptions.map((category) => (
+                            <Select.Group key={category.category}>
+                              <Select.Label className="px-2 text-xs leading-[25px] text-slate-500 font-medium uppercase">
+                                {category.category}
+                              </Select.Label>
+
+                              {category.questions.map((question) => (
+                                <Select.Item
+                                  key={question.id}
+                                  value={question.title}
+                                  className="text-[13px] leading-none rounded-[3px] flex items-center gap-2 justify-between md:h-[25px] px-2 py-1.5 md:py-0 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                                >
+                                  <Select.ItemText>
+                                    {question.title}
+                                  </Select.ItemText>
+                                  <Select.ItemIndicator>
+                                    <CheckIcon className="size-4" />
+                                  </Select.ItemIndicator>
+                                </Select.Item>
+                              ))}
+                              {category.questions.length === 0 && (
+                                <Select.Item
+                                  disabled
+                                  value="empty"
+                                  className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                                >
+                                  <Select.ItemText>
+                                    Todas as perguntas da categoria já foram
+                                    selecionadas.
+                                  </Select.ItemText>
+                                </Select.Item>
+                              )}
+                            </Select.Group>
+                          ))}
+
+                          <Select.Group>
                             <Select.Label className="px-2 text-xs leading-[25px] text-slate-500 font-medium uppercase">
-                              {category.category}
+                              Adicional
                             </Select.Label>
-
-                            {category.questions.map((question) => (
-                              <Select.Item
-                                key={question.id}
-                                value={question.title}
-                                className="text-[13px] leading-none rounded-[3px] flex items-center gap-2 justify-between md:h-[25px] px-2 py-1.5 md:py-0 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
-                              >
-                                <Select.ItemText>
-                                  {question.title}
-                                </Select.ItemText>
-                                <Select.ItemIndicator>
-                                  <CheckIcon className="size-4" />
-                                </Select.ItemIndicator>
-                              </Select.Item>
-                            ))}
-                            {category.questions.length === 0 && (
-                              <Select.Item
-                                disabled
-                                value="empty"
-                                className="text-[13px] leading-none rounded-[3px] flex items-center justify-between h-[25px] px-2 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
-                              >
-                                <Select.ItemText>
-                                  Todas as perguntas da categoria já foram
-                                  selecionadas.
-                                </Select.ItemText>
-                              </Select.Item>
-                            )}
+                            <Select.Item
+                              value="custom"
+                              className="text-[13px] leading-none rounded-[3px] flex items-center gap-2 justify-between md:h-[25px] px-2 py-1.5 md:py-0 relative select-none data-[disabled]:text-slate-300 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700"
+                            >
+                              <Select.ItemText>
+                                Adicionar uma pergunta personalizada para esta
+                                publicação
+                              </Select.ItemText>
+                              <Select.ItemIndicator>
+                                <CheckIcon className="size-4" />
+                              </Select.ItemIndicator>
+                            </Select.Item>
                           </Select.Group>
-                        ))}
-                      </Select.Viewport>
-                      <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-slate-800 cursor-default">
-                        <ChevronDownIcon className="size-4" />
-                      </Select.ScrollDownButton>
-                    </Select.Content>
-                  </Select.Portal>
-                </Select.Root>
+                        </Select.Viewport>
+                        <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-slate-800 cursor-default">
+                          <ChevronDownIcon className="size-4" />
+                        </Select.ScrollDownButton>
+                      </Select.Content>
+                    </Select.Portal>
+                  </Select.Root>
 
-                <button
-                  className="bg-slate-200 px-4 py-2 flex items-center justify-center rounded enabled:hover:bg-slate-300 disabled:opacity-30"
-                  onClick={handleAddQuestion}
-                  disabled={!selected.length}
-                >
-                  Adicionar
-                </button>
-              </>
+                  {selected === 'custom' && (
+                    <div className="hidden flex-col gap-1 lg:flex">
+                      <label>Insira a pergunta personalizada</label>
+                      <textarea
+                        rows={2}
+                        value={customQuestion}
+                        onChange={(e) => setCustomQuestion(e.target.value)}
+                        className="px-3 py-1 border w-full rounded border-zinc-200 shadow-sm"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-2 w-full lg:w-32">
+                  {selected === 'custom' && (
+                    <div className="flex flex-col gap-1 lg:hidden">
+                      <label>Insira a pergunta personalizada</label>
+                      <textarea
+                        rows={2}
+                        value={customQuestion}
+                        onChange={(e) => setCustomQuestion(e.target.value)}
+                        className="px-3 py-1 border w-full rounded border-zinc-200 shadow-sm"
+                      />
+                    </div>
+                  )}
+                  <button
+                    className="bg-slate-200 px-4 py-2 flex mt-auto items-center justify-center rounded enabled:hover:bg-slate-300 disabled:opacity-30 w-full"
+                    onClick={handleAddQuestion}
+                    disabled={!selected.length}
+                  >
+                    Adicionar
+                  </button>
+                </div>
+              </div>
             )}
-          </div>
+          </>
 
           <button
-            className="w-40 mt-4 h-10 px-4 py-2 flex items-center justify-center rounded text-white ml-auto bg-slate-700 enabled:hover:bg-slate-600"
+            className="w-full mt-4 h-10 px-4 py-2 flex items-center justify-center rounded text-white ml-auto bg-slate-700 enabled:hover:bg-slate-600"
             type="button"
             onClick={handleSubmit}
           >
