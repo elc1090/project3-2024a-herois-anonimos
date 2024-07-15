@@ -24,9 +24,12 @@ A aplicação conta com perguntas pré definidas que podem ser incluídas, visan
 O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento, mas mantendo uma interface simples e de fácil entendimento.
 
 ### Acesso de teste
-#### Usuário administrador
+#### Administrador
 <p><strong>E-mail:</strong> john@example.com</p>
 <p><strong>Senha:</strong> 123456</p>
+
+#### Usuário comum
+Para acessar como um usuário sem as permissões de administrador, crie uma nova conta.
 
 ## Atualizações
 <table class="table table-bordered table-hover table-condensed">
