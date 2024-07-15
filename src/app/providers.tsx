@@ -14,7 +14,7 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <AuthProvider>
       {children}
-      <ToastContainer />
+      <ToastContainer hideProgressBar />
       <ScrollToTop />
     </AuthProvider>
   )

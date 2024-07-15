@@ -102,7 +102,7 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
 
   <tr>
     <td align="right">1.0.0</td>
-    <td>12/07/2024</td>
+    <td>16/07/2024</td>
     <td>
       <ul>
         <li>Ajuste das margens na tela de configurações.</li>
@@ -116,6 +116,7 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
         <li>Adicionado opção de adicionar pergunta personalizada no menu de perguntas na página de criação/edição de publicação.<li>
         <li>Ajuste de estilo do loader de carregamento da página 'minhas publicações'.</li>
         <li>Removido elemento da imagem no card de publicações quando a publicação não tem uma imagem.</li>
+        <li>Removida a animação de progresso das mensagens de alerta.</li>
       </ul>
     </td>
   </tr>
