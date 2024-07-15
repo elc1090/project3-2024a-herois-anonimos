@@ -107,6 +107,7 @@ O foco do projeto foi direcionado no _backend_ visando melhorar meu conhecimento
       <ul>
         <li>Ajuste das margens na tela de configurações.</li>
         <li>Ajuste de layout para versão de celular.</li>
+        <li>Ajuste de alinhamento de texto para esquerda na descrição e respostas das publicações.</li>
       </ul>
     </td>
   </tr>

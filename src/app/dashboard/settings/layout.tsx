@@ -10,5 +10,5 @@ export default function SettingsLayout({
     redirect('/dashboard')
   }
 
-  return <div className="px-4 lg:px-0">{children}</div>
+  return <div className="px-4 lg:px-0 w-full">{children}</div>
 }

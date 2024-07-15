@@ -79,7 +79,7 @@ export function PostsList() {
                   className="rounded-lg h-60 md:h-80 object-cover md:object-contain bg-slate-200"
                 />
 
-                <span className="line-clamp-3 text-justify text-sm md:text-base leading-tight">
+                <span className="line-clamp-2 text-sm md:text-base leading-tight">
                   {post.content}
                 </span>
               </article>

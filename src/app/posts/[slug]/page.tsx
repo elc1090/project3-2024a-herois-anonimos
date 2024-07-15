@@ -43,7 +43,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
         <h1 className="text-xl md:text-2xl leading-tight font-bold text-slate-900 text-center md:text-left text-balance">
           {post.title}
         </h1>
-        <p className="text-sm md:text-base text-slate-700 text-justify leading-tight">
+        <p className="text-sm md:text-base text-slate-700 leading-tight">
           {post.content}
         </p>
 
@@ -52,7 +52,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
             <h2 className="font-semibold text-base md:text-lg leading-tight text-slate-900 text-justify">
               {item.title}
             </h2>
-            <span className="text-sm md:text-base text-justify leading-tight text-slate-700">
+            <span className="text-sm md:text-base leading-tight text-slate-700">
               {item.answer}
             </span>
           </div>
