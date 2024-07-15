@@ -199,13 +199,7 @@ export function UserDialog({ authorId, onClose }: UserDialogProps) {
             </div>
 
             <div className="flex flex-col space-y-1">
-              <label htmlFor="email">E-mail</label>
-              {/* <input
-              id="email"
-              type="email"
-              className="px-3 py-1 h-10 border rounded border-zinc-200"
-              {...register('email')}
-            /> */}
+              <label htmlFor="role">Permissão</label>
               <Controller
                 name="role"
                 control={control}
