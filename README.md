@@ -99,14 +99,6 @@ Além do usuário abaixo, é possível criar uma conta. Todas as contas criadas 
   - Adicionar nova pergunta em uma categoria específica;
   - Remover pergunta.
 
-#### Administrador
-<p><strong>E-mail:</strong> john@example.com</p>
-<p><strong>Senha:</strong> 123456</p>
-
-#### Usuário comum
-Para acessar como um usuário sem as permissões de administrador, crie uma nova conta.
-
-
 ## Atualizações
 <table class="table table-bordered table-hover table-condensed">
   <thead>
